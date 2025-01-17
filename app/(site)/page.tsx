@@ -17,8 +17,8 @@ export default async function LandingPage() {
     error,
   } = await supabase.auth.getUser();
   return (
-    <div className='h-min-svh flex flex-col bg-background'>
-      <main className='container mx-auto px-4 py-16'>
+    <main className='h-min-svh flex flex-col bg-background'>
+      <div className='container mx-auto px-4 py-16'>
         <div className='text-center mb-16'>
           <h1 className='text-5xl font-bold mb-4 text-foreground'>
             Track Your Fly Fishing Adventures
@@ -91,7 +91,7 @@ export default async function LandingPage() {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
