@@ -7,7 +7,7 @@ import { ThemeProvider } from '../../components/theme-provider';
 const quicksand = Quicksand({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'FlyTracker',
+  title: 'The Catch Chronicles',
   description: 'A simple fly fishing logbook',
 };
 
