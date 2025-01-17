@@ -48,7 +48,7 @@ export default function AboutPage() {
           </p>
           <p>
             When practiced correctly, catch and release can have minimal impact
-            on fish populations. However, it's crucial to handle fish properly
+            on fish populations. However, it is crucial to handle fish properly
             to ensure their survival after release.
           </p>
         </CardContent>
@@ -95,9 +95,9 @@ export default function AboutPage() {
               Keep fish in the water as much as possible during unhooking and
               photography
             </li>
-            <li>Support the fish's body horizontally and avoid squeezing</li>
+            <li>Support the fish body horizontally and avoid squeezing</li>
             <li>
-              Use rubber or knotless nets to reduce damage to the fish's scales
+              Use rubber or knotless nets to reduce damage to the fish scales
               and fins
             </li>
             <li>
