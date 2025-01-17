@@ -6,7 +6,7 @@ export default function AboutPage() {
     <main className='container mx-auto px-4 py-8'>
       <h1 className='text-4xl font-bold mb-6'>About The Catch Chronicles</h1>
 
-      <Card className='mb-8'>
+      <Card className='mb-8 border border-border'>
         <CardHeader>
           <CardTitle className='flex items-center'>
             <Info className='mr-2' />
@@ -32,7 +32,7 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
-      <Card className='mb-8'>
+      <Card className='mb-8 border border-border'>
         <CardHeader>
           <CardTitle className='flex items-center'>
             <FishSymbol className='mr-2' />
@@ -54,7 +54,7 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
-      <Card className='mb-8'>
+      <Card className='mb-8 border border-border'>
         <CardHeader>
           <CardTitle className='flex items-center'>
             <Heart className='mr-2' />
@@ -76,7 +76,7 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
-      <Card className='mb-8'>
+      <Card className='mb-8 border border-border'>
         <CardHeader>
           <CardTitle className='flex items-center'>
             <Droplet className='mr-2' />
@@ -112,7 +112,7 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className='border border-border'>
         <CardHeader>
           <CardTitle className='flex items-center'>
             <Users className='mr-2' />
