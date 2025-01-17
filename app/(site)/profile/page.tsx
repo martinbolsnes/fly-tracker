@@ -80,20 +80,28 @@ export default function ProfilePage() {
 
   if (error) {
     return (
-      <div className='flex flex-col justify-center items-center h-screen'>
-        <p className='text-red-500 mb-4'>Error: {error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+      <div className='flex justify-center items-center mx-auto h-screen'>
+        <div className='p-8 rounded-lg border border-border flex flex-col items-center'>
+          <h3 className='text-destructive mb-4 font-semibold'>
+            Error: {error}
+          </h3>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className='flex flex-col justify-center items-center h-screen'>
-        <p>User not found. Please log in.</p>
-        <Link href='/login'>
-          <Button className='mt-4'>Log in</Button>
-        </Link>
+      <div className='flex justify-center items-center mx-auto h-screen'>
+        <div className='p-8 rounded-lg border border-border flex flex-col items-center'>
+          <h3 className='text-lg font-semibold'>
+            You need to log in to view your profile
+          </h3>
+          <Link href='/login'>
+            <Button className='mt-4'>Log in</Button>
+          </Link>
+        </div>
       </div>
     );
   }
