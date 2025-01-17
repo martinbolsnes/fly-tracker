@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
-import { Climate_Crisis } from 'next/font/google';
 import {
   Sheet,
   SheetContent,
