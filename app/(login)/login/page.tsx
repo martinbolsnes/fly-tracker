@@ -15,8 +15,7 @@ export default function LoginPage() {
             'text-4xl font-medium font-urbanist flex items-center justify-center pb-4'
           )}
         >
-          <GiFishingPole color='primary' className='w-8 h-8 mr-4' />
-          FlyTracker
+          The Catch Chronicles
         </h1>
         <p className={cn('text-foreground/60')}>
           If this is your first time logging in, a user will be created for you.
