@@ -17,8 +17,9 @@ import LogoutButton from './Logout/Logout';
 import ThemeToggle from './themeToggle';
 
 export const Header = async () => {
-  const supabase = await createClient();
-  const { data: user } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await (await createClient()).auth.getUser();
 
   return (
     <header
@@ -69,16 +70,20 @@ export const Header = async () => {
               </SheetTitle>
             </SheetHeader>
             <div className={cn('flex flex-col items-end gap-4 py-6 text-lg')}>
-              <Link href='/'>
-                <Button variant='ghost' className='font-semibold'>
-                  Home
-                </Button>
-              </Link>
-              <Link href='/about'>
-                <Button variant='ghost' className='font-semibold'>
-                  About
-                </Button>
-              </Link>
+              <SheetTrigger asChild>
+                <Link href='/'>
+                  <Button variant='ghost' className='font-semibold'>
+                    Home
+                  </Button>
+                </Link>
+              </SheetTrigger>
+              <SheetTrigger asChild>
+                <Link href='/about'>
+                  <Button variant='ghost' className='font-semibold'>
+                    About
+                  </Button>
+                </Link>
+              </SheetTrigger>
               <>
                 <Separator />
                 {user ? (
