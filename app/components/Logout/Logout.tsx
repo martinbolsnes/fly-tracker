@@ -15,13 +15,14 @@ export default function LogoutButton() {
     setLoading(true);
     await supabase.auth.signOut();
     setLoading(false);
+    router.push('/');
     router.refresh();
   };
 
   return (
     <Button
       variant='outline'
-      className='border-rose-500 font-semibold'
+      className='border-destructive font-semibold'
       onClick={handleLogout}
     >
       {loading ? <LoadingSpinner fill='fill-rose-500' /> : 'Log out'}
