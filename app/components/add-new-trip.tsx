@@ -23,7 +23,6 @@ type FishingTrip = {
 export default function AddNewTrip() {
   const supabase = createClient();
   const user = supabase.auth.getUser();
-  const [trips, setTrips] = useState<FishingTrip[]>([]);
   const [newTrip, setNewTrip] = useState<Omit<FishingTrip, 'id' | 'user_id'>>({
     date: '',
     location: '',
@@ -43,7 +42,7 @@ export default function AddNewTrip() {
     if (error) {
       console.error('Error fetching trips:', error);
     } else {
-      setTrips(data || []);
+      console.log('Trips:', data);
     }
   };
 
@@ -62,7 +61,7 @@ export default function AddNewTrip() {
       ? { ...editingTrip, ...newTrip }
       : { ...newTrip, user_id: (await user).data.user!.id };
 
-    const { data, error } = editingTrip
+    const { error } = editingTrip
       ? await supabase
           .from('fishing_trips')
           .update(tripData)

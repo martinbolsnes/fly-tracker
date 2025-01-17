@@ -2,7 +2,6 @@ import { createClient } from '../../lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Menu } from 'lucide-react';
-import { GiFishingPole } from 'react-icons/gi';
 import Link from 'next/link';
 import { Climate_Crisis } from 'next/font/google';
 import {
@@ -18,11 +17,9 @@ import Avatar from './Avatar';
 import LogoutButton from './Logout/Logout';
 import ThemeToggle from './themeToggle';
 
-const climateCrisis = Climate_Crisis({ subsets: ['latin'] });
-
 export const Header = async () => {
   const supabase = await createClient();
-  const { data: user, error } = await supabase.auth.getUser();
+  const { data: user } = await supabase.auth.getUser();
 
   return (
     <header

@@ -28,14 +28,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { createClient } from '@/lib/supabase/client';
-import {
-  Edit,
-  Trash2,
-  Upload,
-  ImageOff,
-  FishSymbol,
-  CloudSunRain,
-} from 'lucide-react';
+import { Edit, Trash2, Upload, FishSymbol, CloudSunRain } from 'lucide-react';
 import { toast } from '@/components/hooks/use-toast';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { Badge } from '@/components/ui/badge';
@@ -66,7 +59,6 @@ export default function TripsPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [tripToDelete, setTripToDelete] = useState<string | null>(null);
-  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const client = createClient();
 
   useEffect(() => {
@@ -138,9 +130,9 @@ export default function TripsPage() {
 
         setTrips(trips.filter((trip) => trip.id !== tripToDelete));
         toast({
-          title: 'Success',
+          title: 'Deleted',
           description: 'Trip deleted successfully',
-          variant: 'success',
+          variant: 'default',
         });
       } catch (error) {
         console.error('Error deleting trip:', error);
@@ -168,7 +160,6 @@ export default function TripsPage() {
           title: 'Uploading image...',
           action: <LoadingSpinner fill='primary' />,
         });
-        setUploadStatus('Uploading image...');
         const {
           data: { user },
         } = await client.auth.getUser();
@@ -206,7 +197,6 @@ export default function TripsPage() {
           description: 'Image uploaded successfully',
           variant: 'default',
         });
-        setUploadStatus('Upload successful!');
       } catch (error) {
         console.error('Error uploading image:', error);
         toast({
@@ -214,9 +204,8 @@ export default function TripsPage() {
           description: 'Failed to upload image. Please try again',
           variant: 'destructive',
         });
-        setUploadStatus('Upload failed. Please try again.');
       } finally {
-        setTimeout(() => setUploadStatus(null), 3000);
+        e.target.value = '';
       }
     }
   };

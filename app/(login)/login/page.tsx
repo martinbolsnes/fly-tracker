@@ -1,10 +1,8 @@
 'use client';
 
-import { Fish } from 'lucide-react';
 /* import LoginButtonGithub from '@/app/components/Login/LoginGithub'; */
 import LoginButtonGoogle from '@/app/components/Login/LoginGoogle';
 import { cn } from '@/lib/utils';
-import { GiFishingPole } from 'react-icons/gi';
 
 export default function LoginPage() {
   return (

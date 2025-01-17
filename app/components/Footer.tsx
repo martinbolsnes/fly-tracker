@@ -1,7 +1,3 @@
-import { FishSymbol } from 'lucide-react';
-import Link from 'next/link';
-import { GiFishingPole } from 'react-icons/gi';
-
 export default function Footer() {
   return (
     <footer className='bg-background py-8 border-t border-border'>

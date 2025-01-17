@@ -11,7 +11,7 @@ import { CircleUser } from 'lucide-react';
 
 export default async function AvatarComponent() {
   const supabase = await createClient();
-  const { data: user, error } = await supabase.auth.getUser();
+  const { data: user } = await supabase.auth.getUser();
 
   return (
     <TooltipProvider>

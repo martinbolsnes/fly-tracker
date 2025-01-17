@@ -10,7 +10,6 @@ import { User } from '@supabase/supabase-js';
 import { FishSymbol, MapPin, Calendar } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
-import { useTheme } from 'next-themes';
 import {
   ChartContainer,
   ChartTooltip,
@@ -20,7 +19,6 @@ import {
   Bar,
   BarChart,
   XAxis,
-  YAxis,
   Pie,
   PieChart,
   Cell,

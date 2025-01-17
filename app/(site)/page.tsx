@@ -14,7 +14,6 @@ export default async function LandingPage() {
   const supabase = await createClient();
   const {
     data: { user },
-    error,
   } = await supabase.auth.getUser();
   return (
     <main className='h-min-svh flex flex-col bg-background'>

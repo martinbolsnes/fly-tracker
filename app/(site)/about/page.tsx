@@ -1,11 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { FishSymbol, Leaf, Heart, Info, Droplet, Users } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FishSymbol, Heart, Info, Droplet, Users } from 'lucide-react';
 
 export default function AboutPage() {
   return (
