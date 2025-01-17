@@ -27,7 +27,8 @@ export default function Footer() {
           </div> */}
         </div>
         <div className='mt-4 text-center text-sm text-foreground/60'>
-          © {new Date().getFullYear()} FlyTracker. All rights reserved.
+          © {new Date().getFullYear()} The Catch Chronicles. All rights
+          reserved.
         </div>
       </div>
     </footer>
