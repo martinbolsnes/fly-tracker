@@ -25,6 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -63,6 +64,8 @@ export default function TripsPage() {
   const [filterLocation, setFilterLocation] = useState('');
   const [editingTrip, setEditingTrip] = useState<FishingTrip | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [tripToDelete, setTripToDelete] = useState<string | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const client = createClient();
 
@@ -119,16 +122,26 @@ export default function TripsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this trip?')) {
+    setTripToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (tripToDelete) {
       try {
         const { error } = await client
           .from('fishing_trips')
           .delete()
-          .eq('id', id);
+          .eq('id', tripToDelete);
 
         if (error) throw error;
 
-        setTrips(trips.filter((trip) => trip.id !== id));
+        setTrips(trips.filter((trip) => trip.id !== tripToDelete));
+        toast({
+          title: 'Success',
+          description: 'Trip deleted successfully',
+          variant: 'success',
+        });
       } catch (error) {
         console.error('Error deleting trip:', error);
         toast({
@@ -136,12 +149,10 @@ export default function TripsPage() {
           description: 'Failed to delete trip',
           variant: 'destructive',
         });
+      } finally {
+        setIsDeleteDialogOpen(false);
+        setTripToDelete(null);
       }
-      toast({
-        title: 'Deleted',
-        description: 'Trip deleted successfully',
-        variant: 'default',
-      });
     }
   };
 
@@ -487,6 +498,28 @@ export default function TripsPage() {
               <Button type='submit'>Save changes</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className='bg-card border border-border rounded-lg'>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this fishing trip? This action
+              cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant='outline'
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant='destructive' onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </main>
