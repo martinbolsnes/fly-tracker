@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Menu } from 'lucide-react';
 import { GiFishingPole } from 'react-icons/gi';
 import Link from 'next/link';
+import { Climate_Crisis } from 'next/font/google';
 import {
   Sheet,
   SheetContent,
@@ -17,6 +18,8 @@ import Avatar from './Avatar';
 import LogoutButton from './Logout/Logout';
 import ThemeToggle from './themeToggle';
 
+const climateCrisis = Climate_Crisis({ subsets: ['latin'] });
+
 export const Header = async () => {
   const supabase = await createClient();
   const { data: user, error } = await supabase.auth.getUser();
@@ -24,13 +27,17 @@ export const Header = async () => {
   return (
     <header
       className={cn(
-        'bg-background/95 border-b border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 py-4 flex items-center justify-between sticky top-0 z-10'
+        'bg-background/95 border-b border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-10'
       )}
     >
       <div>
-        <Link href='/' className={cn('flex items-center gap-2')}>
-          <GiFishingPole color='primary' className='w-6 h-6' />
-          <h1 className={cn('text-lg sm:text-xl font-semibold')}>FlyTracker</h1>
+        <Link href='/'>
+          <p className={cn(`text-lg sm:text-xl font-bold -mb-2`)}>
+            <span className='text-base text-primary'>The</span> Catch
+            <br />
+          </p>
+
+          <p className={cn(`text-lg sm:text-xl font-bold`)}>Chronicles</p>
         </Link>
       </div>
       <div className={cn('flex items-center gap-4')}>
@@ -53,9 +60,15 @@ export const Header = async () => {
           <SheetContent className={cn('bg-background/95 border border-border')}>
             <SheetHeader className={cn('flex')}>
               <SheetTitle>
-                <Link href='/' className={cn('flex items-center gap-2')}>
-                  <GiFishingPole color='primary' className='w-6 h-6' />
-                  <h1 className={cn('text-md font-semibold')}>FlyTracker</h1>
+                <Link href='/'>
+                  <p className={cn(`text-md sm:text-lg font-bold -mb-2`)}>
+                    <span className='text-xs text-primary'>The</span> Catch
+                    <br />
+                  </p>
+
+                  <p className={cn(`text-md sm:text-lg font-bold`)}>
+                    Chronicles
+                  </p>
                 </Link>
               </SheetTitle>
             </SheetHeader>
@@ -63,6 +76,11 @@ export const Header = async () => {
               <Link href='/'>
                 <Button variant='ghost' className='font-semibold'>
                   Home
+                </Button>
+              </Link>
+              <Link href='/about'>
+                <Button variant='ghost' className='font-semibold'>
+                  About
                 </Button>
               </Link>
               <>
