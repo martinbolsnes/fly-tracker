@@ -14,7 +14,7 @@ type FishingTrip = {
   user_id: string;
   date: string;
   location: string;
-  fish_caught: string;
+  fish_caught?: string;
   weather: string;
   notes: string;
   image_url?: string;
