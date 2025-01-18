@@ -133,6 +133,7 @@ export default function ProfilePage() {
   }, {} as Record<string, number>);
 
   const chartData = Object.entries(fishCounts)
+    .filter(([name]) => name !== 'No catch')
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 5);
