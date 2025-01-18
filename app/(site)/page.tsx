@@ -24,7 +24,7 @@ export default async function LandingPage() {
           </h1>
           <p className='text-xl mb-8 text-foreground/80'>
             Record catches, analyze patterns, and become a better angler with
-            FlyFish Logbook
+            The Catch Chronicles
           </p>
 
           <Button size='lg' asChild variant='default'>

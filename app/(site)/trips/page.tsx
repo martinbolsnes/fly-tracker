@@ -220,7 +220,7 @@ export default function TripsPage() {
         .update({
           date: editingTrip.date,
           location: editingTrip.location,
-          fish_caught: editingTrip.fish_caught,
+          fish_caught: editingTrip.fish_caught || 'No catch',
           weather: editingTrip.weather,
           notes: editingTrip.notes,
         })
@@ -300,7 +300,7 @@ export default function TripsPage() {
             placeholder='Filter by location'
             value={filterLocation}
             onChange={(e) => setFilterLocation(e.target.value)}
-            className='w-full sm:w-[200px]'
+            className='w-full sm:w-[200px] text-base'
           />
           <Link href='/logbook'>
             <Button variant='default' size='sm'>
@@ -419,7 +419,7 @@ export default function TripsPage() {
                       prev ? { ...prev, date: e.target.value } : null
                     )
                   }
-                  className='col-span-3'
+                  className='col-span-3 text-base'
                 />
               </div>
               <div className='grid grid-cols-4 items-center gap-4'>
@@ -434,7 +434,7 @@ export default function TripsPage() {
                       prev ? { ...prev, location: e.target.value } : null
                     )
                   }
-                  className='col-span-3'
+                  className='col-span-3 text-base'
                 />
               </div>
               <div className='grid grid-cols-4 items-center gap-4'>
@@ -449,7 +449,7 @@ export default function TripsPage() {
                       prev ? { ...prev, fish_caught: e.target.value } : null
                     )
                   }
-                  className='col-span-3'
+                  className='col-span-3 text-base'
                 />
               </div>
               <div className='grid grid-cols-4 items-center gap-4'>
@@ -464,7 +464,7 @@ export default function TripsPage() {
                       prev ? { ...prev, weather: e.target.value } : null
                     )
                   }
-                  className='col-span-3'
+                  className='col-span-3 text-base'
                 />
               </div>
               <div className='grid grid-cols-4 items-center gap-4'>
@@ -479,7 +479,7 @@ export default function TripsPage() {
                       prev ? { ...prev, notes: e.target.value } : null
                     )
                   }
-                  className='col-span-3'
+                  className='col-span-3 text-base'
                 />
               </div>
             </div>

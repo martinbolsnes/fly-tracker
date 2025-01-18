@@ -106,7 +106,7 @@ export default function AddNewTrip() {
           value={newTrip.date}
           onChange={handleInputChange}
           required
-          className='w-full'
+          className='w-full text-base'
         />
         <Input
           type='text'
@@ -115,7 +115,7 @@ export default function AddNewTrip() {
           value={newTrip.location}
           onChange={handleInputChange}
           required
-          className='w-full'
+          className='w-full text-base'
         />
         <Input
           type='text'
@@ -123,8 +123,7 @@ export default function AddNewTrip() {
           placeholder='Fish Caught (species, size)'
           value={newTrip.fish_caught}
           onChange={handleInputChange}
-          required
-          className='w-full'
+          className='w-full text-base'
         />
         <Input
           type='text'
@@ -133,14 +132,14 @@ export default function AddNewTrip() {
           value={newTrip.weather}
           onChange={handleInputChange}
           required
-          className='w-full'
+          className='w-full text-base'
         />
         <Textarea
           name='notes'
           placeholder='Additional Notes'
           value={newTrip.notes}
           onChange={handleInputChange}
-          className='w-full'
+          className='w-full text-base'
         />
         <Button type='submit' className='mr-4'>
           {editingTrip ? 'Update Trip' : 'Log Trip'}
