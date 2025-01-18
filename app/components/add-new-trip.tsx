@@ -121,7 +121,7 @@ export default function AddNewTrip() {
           type='text'
           name='fish_caught'
           placeholder='Fish Caught (species, size)'
-          value={newTrip.fish_caught}
+          value={newTrip.fish_caught || 'No catch'}
           onChange={handleInputChange}
           className='w-full text-base'
         />
