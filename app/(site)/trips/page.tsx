@@ -41,6 +41,7 @@ import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { GiFishingPole } from 'react-icons/gi';
+import { useRouter } from 'next/navigation';
 
 type FishCatch = {
   id: string;
@@ -75,6 +76,7 @@ export default function TripsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [tripToDelete, setTripToDelete] = useState<string | null>(null);
   const client = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     fetchTrips();
@@ -110,7 +112,7 @@ export default function TripsPage() {
 
         setTrips(tripsWithCatches || []);
       } else {
-        throw new Error('No user found');
+        router.push('/login');
       }
     } catch (err) {
       console.error('Error in fetchTrips:', err);
@@ -310,9 +312,15 @@ export default function TripsPage() {
 
   if (error) {
     return (
-      <div className='flex flex-col justify-center items-center h-screen'>
-        <p className='text-red-500 mb-4'>Error: {error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+      <div className='flex justify-center items-center h-screen'>
+        <Card className='flex flex-col justify-center items-center border border-border'>
+          <CardContent className='text-red-500 font-semibold p-4'>
+            Error: {error}
+          </CardContent>
+          <CardFooter>
+            <Button onClick={() => window.location.reload()}>Retry</Button>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
@@ -643,7 +651,7 @@ export default function TripsPage() {
               cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className='sm:flex sm:justify-end gap-2'>
             <Button
               variant='outline'
               onClick={() => setIsDeleteDialogOpen(false)}
