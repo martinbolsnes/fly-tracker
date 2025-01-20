@@ -490,7 +490,7 @@ export default function TripsPage() {
             <div className='flex flex-col gap-4 py-4'>
               <div className='flex flex-row gap-4'>
                 <div className='items-center gap-4'>
-                  <label htmlFor='date' className='text-right'>
+                  <label htmlFor='date' className='text-left'>
                     Date
                   </label>
                   <Input
@@ -507,7 +507,7 @@ export default function TripsPage() {
                   />
                 </div>
                 <div className=' items-center gap-4'>
-                  <label htmlFor='time_of_day' className='text-right'>
+                  <label htmlFor='time_of_day' className='text-left'>
                     Time of Day
                   </label>
                   <Select
@@ -532,7 +532,7 @@ export default function TripsPage() {
               </div>
               <div className='flex flex-row gap-4'>
                 <div className='items-center gap-4'>
-                  <label htmlFor='location' className='text-right'>
+                  <label htmlFor='location' className='text-left'>
                     Location
                   </label>
                   <Input
@@ -548,7 +548,7 @@ export default function TripsPage() {
                   />
                 </div>
                 <div className=' items-center gap-4'>
-                  <label htmlFor='weather' className='text-right'>
+                  <label htmlFor='weather' className='text-left'>
                     Weather
                   </label>
                   <Input
@@ -565,7 +565,7 @@ export default function TripsPage() {
                 </div>
               </div>
               <div className='items-center gap-4'>
-                <label htmlFor='notes' className='text-right'>
+                <label htmlFor='notes' className='text-left'>
                   Notes
                 </label>
                 <Textarea
@@ -581,7 +581,7 @@ export default function TripsPage() {
                 />
               </div>
               <div className='col-span-4'>
-                <h4 className='font-semibold mb-2'>Fish Catches</h4>
+                <label className='text-left'>Fish Catches</label>
                 {editingTrip?.fish_catches.map((fishCatch, index) => (
                   <div
                     key={index}
