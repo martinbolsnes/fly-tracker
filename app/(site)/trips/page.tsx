@@ -28,22 +28,37 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { createClient } from '@/lib/supabase/client';
-import { Edit, Trash2, Upload, FishSymbol, CloudSunRain } from 'lucide-react';
+import {
+  Edit,
+  Trash2,
+  Upload,
+  FishSymbol,
+  CloudSunRain,
+  Clock,
+} from 'lucide-react';
 import { toast } from '@/components/hooks/use-toast';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { GiFishingPole } from 'react-icons/gi';
 
+type FishCatch = {
+  id: string;
+  fish_type: string;
+  caught_on: string;
+};
+
 type FishingTrip = {
   id: string;
   user_id: string;
   date: string;
+  time_of_day: string;
   location: string;
-  fish_caught: string;
   weather: string;
-  notes: string;
+  notes: string | null;
   image_url: string | null;
+  catch_count: number;
+  fish_catches: FishCatch[];
 };
 
 const BUCKET_NAME = 'trip-images';
@@ -75,12 +90,25 @@ export default function TripsPage() {
         const { data: tripsData, error: tripsError } = await client
           .from('fishing_trips')
           .select('*')
-          .eq('user_id', user.id);
+          .order('date', { ascending: false });
 
         if (tripsError)
           throw new Error('Failed to fetch trips: ' + tripsError.message);
 
-        setTrips(tripsData || []);
+        const tripsWithCatches = await Promise.all(
+          tripsData.map(async (trip) => {
+            const { data: catchesData, error: catchesError } = await client
+              .from('fish_catches')
+              .select('*')
+              .eq('trip_id', trip.id);
+
+            if (catchesError) throw catchesError;
+
+            return { ...trip, fish_catches: catchesData };
+          })
+        );
+
+        setTrips(tripsWithCatches || []);
       } else {
         throw new Error('No user found');
       }
@@ -215,25 +243,50 @@ export default function TripsPage() {
     if (!editingTrip) return;
 
     try {
-      const { error } = await client
+      const { error: tripError } = await client
         .from('fishing_trips')
         .update({
           date: editingTrip.date,
+          time_of_day: editingTrip.time_of_day,
           location: editingTrip.location,
-          fish_caught: editingTrip.fish_caught || 'No catch',
           weather: editingTrip.weather,
           notes: editingTrip.notes,
+          catch_count: editingTrip.fish_catches.length,
         })
         .eq('id', editingTrip.id);
 
-      if (error) throw error;
+      if (tripError) throw tripError;
+
+      for (const fishCatch of editingTrip.fish_catches) {
+        if (fishCatch.id) {
+          const { error: catchError } = await client
+            .from('fish_catches')
+            .update({
+              fish_type: fishCatch.fish_type,
+              caught_on: fishCatch.caught_on,
+            })
+            .eq('id', fishCatch.id);
+
+          if (catchError) throw catchError;
+        } else {
+          const { error: catchError } = await client
+            .from('fish_catches')
+            .insert({
+              trip_id: editingTrip.id,
+              fish_type: fishCatch.fish_type,
+              caught_on: fishCatch.caught_on,
+            });
+
+          if (catchError) throw catchError;
+        }
+      }
 
       setTrips(
         trips.map((trip) => (trip.id === editingTrip.id ? editingTrip : trip))
       );
       setIsEditDialogOpen(false);
       toast({
-        title: 'Updated',
+        title: 'Success',
         description: 'Trip updated successfully',
         variant: 'default',
       });
@@ -279,7 +332,6 @@ export default function TripsPage() {
             <SelectContent>
               <SelectItem value='date'>Date</SelectItem>
               <SelectItem value='location'>Location</SelectItem>
-              <SelectItem value='fish_caught'>Fish Caught</SelectItem>
             </SelectContent>
           </Select>
           <Select
@@ -319,7 +371,7 @@ export default function TripsPage() {
           {sortedAndFilteredTrips.map((trip) => (
             <Card
               key={trip.id}
-              className='overflow-hidden border border-border'
+              className='flex flex-col overflow-hidden border border-border'
             >
               <div className='relative h-48'>
                 {trip.image_url ? (
@@ -343,16 +395,38 @@ export default function TripsPage() {
               <CardHeader>
                 <CardTitle>{trip.location}</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className='flex-grow'>
                 <div className='grid grid-cols-2 gap-2 text-sm'>
-                  <div className='flex items-center'>
-                    <FishSymbol className='h-4 w-4 mr-2 text-primary' />
-                    {trip.fish_caught}
-                  </div>
                   <div className='flex items-center'>
                     <CloudSunRain className='h-4 w-4 mr-2 text-primary' />
                     {trip.weather}
                   </div>
+                  <div className='flex items-center'>
+                    <Clock className='h-4 w-4 mr-2 text-primary' />
+                    {trip.time_of_day}
+                  </div>
+                  <div className='flex items-center mt-2'>
+                    <FishSymbol className='h-4 w-4 mr-2 text-primary' />
+                    {trip.catch_count}
+                    {trip.catch_count === 1 ? ' fish' : ' fishes'} caught
+                  </div>
+                  {trip.fish_catches.length > 0 && (
+                    <div className='mt-2'>
+                      {trip.fish_catches.length > 0 && (
+                        <ul className='list-disc list-inside'>
+                          {trip.fish_catches.map(
+                            (fishCatch, index) =>
+                              fishCatch.fish_type &&
+                              fishCatch.caught_on && (
+                                <li key={index} className='text-foreground/80'>
+                                  {`${fishCatch.fish_type} (${fishCatch.caught_on})`}
+                                </li>
+                              )
+                          )}
+                        </ul>
+                      )}
+                    </div>
+                  )}
                 </div>
                 {trip.notes && (
                   <p className='mt-2 text-sm text-muted-foreground'>
@@ -405,82 +479,153 @@ export default function TripsPage() {
             <DialogTitle>Edit Fishing Trip</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSaveEdit}>
-            <div className='grid gap-4 py-4'>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <label htmlFor='date' className='text-right'>
-                  Date
-                </label>
-                <Input
-                  id='date'
-                  type='date'
-                  value={editingTrip?.date}
-                  onChange={(e) =>
-                    setEditingTrip((prev) =>
-                      prev ? { ...prev, date: e.target.value } : null
-                    )
-                  }
-                  className='col-span-3 text-base'
-                />
+            <div className='flex flex-col gap-4 py-4'>
+              <div className='flex flex-row gap-4'>
+                <div className='items-center gap-4'>
+                  <label htmlFor='date' className='text-right'>
+                    Date
+                  </label>
+                  <Input
+                    id='date'
+                    type='date'
+                    placeholder='Date'
+                    value={editingTrip?.date}
+                    onChange={(e) =>
+                      setEditingTrip((prev) =>
+                        prev ? { ...prev, date: e.target.value } : null
+                      )
+                    }
+                    className='text-base'
+                  />
+                </div>
+                <div className=' items-center gap-4'>
+                  <label htmlFor='time_of_day' className='text-right'>
+                    Time of Day
+                  </label>
+                  <Select
+                    value={editingTrip?.time_of_day}
+                    onValueChange={(value) =>
+                      setEditingTrip((prev) =>
+                        prev ? { ...prev, time_of_day: value } : null
+                      )
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select time of day' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='Morning'>Morning</SelectItem>
+                      <SelectItem value='Afternoon'>Afternoon</SelectItem>
+                      <SelectItem value='Evening'>Evening</SelectItem>
+                      <SelectItem value='Night'>Night</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <label htmlFor='location' className='text-right'>
-                  Location
-                </label>
-                <Input
-                  id='location'
-                  value={editingTrip?.location}
-                  onChange={(e) =>
-                    setEditingTrip((prev) =>
-                      prev ? { ...prev, location: e.target.value } : null
-                    )
-                  }
-                  className='col-span-3 text-base'
-                />
+              <div className='flex flex-row gap-4'>
+                <div className='items-center gap-4'>
+                  <label htmlFor='location' className='text-right'>
+                    Location
+                  </label>
+                  <Input
+                    id='location'
+                    placeholder='Location'
+                    value={editingTrip?.location}
+                    onChange={(e) =>
+                      setEditingTrip((prev) =>
+                        prev ? { ...prev, location: e.target.value } : null
+                      )
+                    }
+                    className='text-base'
+                  />
+                </div>
+                <div className=' items-center gap-4'>
+                  <label htmlFor='weather' className='text-right'>
+                    Weather
+                  </label>
+                  <Input
+                    id='weather'
+                    placeholder='Weather'
+                    value={editingTrip?.weather}
+                    onChange={(e) =>
+                      setEditingTrip((prev) =>
+                        prev ? { ...prev, weather: e.target.value } : null
+                      )
+                    }
+                    className='text-base'
+                  />
+                </div>
               </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <label htmlFor='fish_caught' className='text-right'>
-                  Fish Caught
-                </label>
-                <Input
-                  id='fish_caught'
-                  value={editingTrip?.fish_caught}
-                  onChange={(e) =>
-                    setEditingTrip((prev) =>
-                      prev ? { ...prev, fish_caught: e.target.value } : null
-                    )
-                  }
-                  className='col-span-3 text-base'
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <label htmlFor='weather' className='text-right'>
-                  Weather
-                </label>
-                <Input
-                  id='weather'
-                  value={editingTrip?.weather}
-                  onChange={(e) =>
-                    setEditingTrip((prev) =>
-                      prev ? { ...prev, weather: e.target.value } : null
-                    )
-                  }
-                  className='col-span-3 text-base'
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
+              <div className='items-center gap-4'>
                 <label htmlFor='notes' className='text-right'>
                   Notes
                 </label>
                 <Textarea
                   id='notes'
-                  value={editingTrip?.notes}
+                  placeholder='Notes'
+                  value={editingTrip?.notes || ''}
                   onChange={(e) =>
                     setEditingTrip((prev) =>
                       prev ? { ...prev, notes: e.target.value } : null
                     )
                   }
-                  className='col-span-3 text-base'
+                  className='text-base'
                 />
+              </div>
+              <div className='col-span-4'>
+                <h4 className='font-semibold mb-2'>Fish Catches</h4>
+                {editingTrip?.fish_catches.map((fishCatch, index) => (
+                  <div
+                    key={index}
+                    className='grid grid-cols-4 items-center gap-4 mb-2'
+                  >
+                    <Input
+                      value={fishCatch.fish_type}
+                      onChange={(e) =>
+                        setEditingTrip((prev) => {
+                          if (!prev) return null;
+                          const newCatches = [...prev.fish_catches];
+                          newCatches[index].fish_type = e.target.value;
+                          return { ...prev, fish_catches: newCatches };
+                        })
+                      }
+                      placeholder='Fish type'
+                      className='col-span-2 text-base'
+                    />
+                    <Input
+                      value={fishCatch.caught_on}
+                      onChange={(e) =>
+                        setEditingTrip((prev) => {
+                          if (!prev) return null;
+                          const newCatches = [...prev.fish_catches];
+                          newCatches[index].caught_on = e.target.value;
+                          return { ...prev, fish_catches: newCatches };
+                        })
+                      }
+                      placeholder='Fly used'
+                      className='col-span-2 text-base'
+                    />
+                  </div>
+                ))}
+                <Button
+                  type='button'
+                  onClick={() =>
+                    setEditingTrip((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            fish_catches: [
+                              ...prev.fish_catches,
+                              { id: '', fish_type: '', caught_on: '' },
+                            ],
+                          }
+                        : null
+                    )
+                  }
+                  className='mt-2'
+                >
+                  Add Fish Catch
+                </Button>
               </div>
             </div>
             <DialogFooter>
