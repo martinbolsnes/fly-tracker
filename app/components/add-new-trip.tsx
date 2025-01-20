@@ -15,6 +15,7 @@ import {
 import { toast } from '@/components/hooks/use-toast';
 import { createClient } from '@/lib/supabase/client';
 import { PlusCircle, X } from 'lucide-react';
+import { LoadingSpinner } from './LoadingSpinner';
 
 type FishCatch = {
   fish_type: string;
@@ -155,6 +156,7 @@ export default function AddNewTrip() {
         required
         value={newTrip.date}
         onChange={handleInputChange}
+        className='text-base'
       />
       <Select
         name='time_of_day'
@@ -167,7 +169,7 @@ export default function AddNewTrip() {
         <SelectTrigger>
           <SelectValue placeholder='Time of day' />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className='text-base border border-border'>
           <SelectItem value='Morning'>Morning</SelectItem>
           <SelectItem value='Afternoon'>Afternoon</SelectItem>
           <SelectItem value='Evening'>Evening</SelectItem>
@@ -181,6 +183,7 @@ export default function AddNewTrip() {
         required
         value={newTrip.location}
         onChange={handleInputChange}
+        className='text-base'
       />
       <Input
         type='text'
@@ -189,12 +192,14 @@ export default function AddNewTrip() {
         required
         value={newTrip.weather}
         onChange={handleInputChange}
+        className='text-base'
       />
       <Textarea
         name='notes'
         placeholder='Notes'
         value={newTrip.notes || ''}
         onChange={(e) => setNewTrip({ ...newTrip, notes: e.target.value })}
+        className='text-base'
       />
 
       <div className='space-y-4'>
@@ -208,6 +213,7 @@ export default function AddNewTrip() {
               onChange={(e) =>
                 updateFishCatch(index, 'fish_type', e.target.value)
               }
+              className='text-base'
             />
             <Input
               type='text'
@@ -216,6 +222,7 @@ export default function AddNewTrip() {
               onChange={(e) =>
                 updateFishCatch(index, 'caught_on', e.target.value)
               }
+              className='text-base'
             />
             {index > 0 && (
               <Button
@@ -241,7 +248,7 @@ export default function AddNewTrip() {
       </div>
 
       <Button type='submit' disabled={loading}>
-        {loading ? 'Adding...' : 'Add Trip'}
+        {loading ? <LoadingSpinner /> : 'Add Trip'}
       </Button>
     </form>
   );
