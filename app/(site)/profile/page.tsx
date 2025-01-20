@@ -28,12 +28,22 @@ import {
   CartesianGrid,
 } from 'recharts';
 
+type FishCatch = {
+  fish_type: string;
+  caught_on: string;
+};
+
 type FishingTrip = {
   id: string;
   user_id: string;
   date: string;
+  time_of_day: string;
   location: string;
-  fish_caught: string;
+  weather: string;
+  notes: string | null;
+  image_url: string | null;
+  catch_count: number;
+  fish_catches: FishCatch[];
 };
 
 export default function ProfilePage() {
@@ -51,15 +61,28 @@ export default function ProfilePage() {
       } = await supabase.auth.getUser();
       if (user) {
         setUser(user);
-        const { data, error } = await supabase
+        const { data: tripsData, error: tripsError } = await supabase
           .from('fishing_trips')
           .select('*')
           .eq('user_id', user.id);
-        if (error) {
-          console.error('Error fetching trips:', error);
-          setError(error.message);
+        if (tripsError) {
+          console.error('Error fetching trips:', tripsError);
+          setError(tripsError.message);
         } else {
-          setTrips(data || []);
+          const tripsWithCatches = await Promise.all(
+            (tripsData || []).map(async (trip) => {
+              const { data: catchesData, error: catchesError } = await supabase
+                .from('fish_catches')
+                .select('*')
+                .eq('trip_id', trip.id);
+              if (catchesError) {
+                console.error('Error fetching catches:', catchesError);
+                setError(catchesError.message);
+              }
+              return { ...trip, fish_catches: catchesData || [] };
+            })
+          );
+          setTrips(tripsWithCatches);
         }
       } else {
         router.push('/login');
@@ -118,13 +141,13 @@ export default function ProfilePage() {
   }
 
   const totalCatches = trips.reduce(
-    (sum, trip) => sum + trip.fish_caught.split(',').length,
+    (sum, trip) => sum + trip.fish_catches.length,
     0
   );
   const uniqueLocations = new Set(trips.map((trip) => trip.location)).size;
 
   const fishCounts = trips.reduce((acc, trip) => {
-    const fishList = trip.fish_caught.split(',').map((fish) => fish.trim());
+    const fishList = trip.fish_catches.map((fish) => fish.fish_type.trim());
     fishList.forEach((fish) => {
       const [species] = fish.split(' ');
       acc[species] = (acc[species] || 0) + 1;
