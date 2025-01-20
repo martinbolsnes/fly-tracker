@@ -24,7 +24,7 @@ export const Header = async () => {
   return (
     <header
       className={cn(
-        'bg-background/95 border-b border-border backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-10'
+        'bg-background border-b border-border px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-10'
       )}
     >
       <div>
@@ -55,7 +55,7 @@ export const Header = async () => {
             </Button>
           </SheetTrigger>
           <SheetContent className={cn('bg-background/95 border border-border')}>
-            <SheetHeader className={cn('flex')}>
+            <SheetHeader className={cn('flex text-left')}>
               <SheetTitle>
                 <Link href='/'>
                   <p className={cn(`text-md sm:text-lg font-bold -mb-2`)}>
