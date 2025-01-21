@@ -651,7 +651,7 @@ export default function TripsPage() {
                     </div>
                     <div>
                       <label htmlFor='weight' className='text-left'>
-                        Weight (kg)
+                        Weight (g)
                       </label>
                       <Input
                         id='weight'
@@ -667,7 +667,7 @@ export default function TripsPage() {
                             return { ...prev, fish_catches: newCatches };
                           })
                         }
-                        placeholder='Weight (kg)'
+                        placeholder='Weight (gram)'
                         className='text-base'
                       />
                     </div>
