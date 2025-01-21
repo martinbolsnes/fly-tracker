@@ -194,16 +194,16 @@ export default function TripPage() {
                                 </HoverCardTrigger>
                                 <HoverCardContent className='border border-border'>
                                   <p>
-                                    The Fulton's K = (W / L^3) * 100, where W is
-                                    the weight of the fish in grams and L is the
-                                    length of the fish in cm. The Fulton's K
-                                    factor is a measure of the condition of the
-                                    fish. A healthy fish will have a K factor
-                                    between 1 and 1.1.
+                                    The Fulton&apos;s K = (W / L^3) * 100, where
+                                    W is the weight of the fish in grams and L
+                                    is the length of the fish in cm. The
+                                    Fulton&apos;s K factor is a measure of the
+                                    condition of the fish. A healthy fish will
+                                    have a K factor between 1 and 1.1.
                                   </p>
                                 </HoverCardContent>
                               </HoverCard>
-                              Fulton's Factor:{' '}
+                              Fulton&apos;s Factor:{' '}
                               {calculateFultonFactor(
                                 fishCatch.length,
                                 fishCatch.weight
