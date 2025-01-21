@@ -187,68 +187,76 @@ export default function TripPage() {
                           <div className='mt-2 grid grid-cols-2 gap-2'>
                             <div>Length: {fishCatch.length} cm</div>
                             <div>Weight: {fishCatch.weight} kg</div>
-                            <div className='col-span-2 flex items-center'>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <Info className='w-4 h-4 mr-2 cursor-pointer' />
-                                </PopoverTrigger>
-                                <PopoverContent className='border border-border'>
-                                  <p>
-                                    The Fulton&apos;s K = (W / L^3) * 100, where
-                                    W is the weight of the fish in grams and L
-                                    is the length of the fish in cm. The
-                                    Fulton&apos;s K factor is a measure of the
-                                    condition of the fish. A healthy fish will
-                                    have a K factor between 1 and 1.1.
-                                  </p>
-                                </PopoverContent>
-                              </Popover>
-                              Fulton&apos;s Factor:{' '}
-                              {calculateFultonFactor(
-                                fishCatch.length,
-                                fishCatch.weight
-                              ).toFixed(2)}
-                            </div>
-                            <div>
-                              <Badge
-                                variant='secondary'
-                                className={`${
-                                  calculateFultonFactor(
+                            {fishCatch.fish_type
+                              .toLowerCase()
+                              .includes('trout') && (
+                              <div className='col-span-2 flex items-center'>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Info className='w-4 h-4 mr-2 cursor-pointer' />
+                                  </PopoverTrigger>
+                                  <PopoverContent className='border border-border'>
+                                    <p>
+                                      The Fulton&apos;s K = (W / L^3) * 100,
+                                      where W is the weight of the fish in grams
+                                      and L is the length of the fish in cm. The
+                                      Fulton&apos;s K factor is a measure of the
+                                      condition of the fish. A healthy fish will
+                                      have a K factor between 1 and 1.1.
+                                    </p>
+                                  </PopoverContent>
+                                </Popover>
+                                Fulton&apos;s Factor:{' '}
+                                {calculateFultonFactor(
+                                  fishCatch.length,
+                                  fishCatch.weight
+                                ).toFixed(2)}
+                              </div>
+                            )}
+                            {fishCatch.fish_type
+                              .toLowerCase()
+                              .includes('trout') && (
+                              <div>
+                                <Badge
+                                  variant='secondary'
+                                  className={`${
+                                    calculateFultonFactor(
+                                      fishCatch.length,
+                                      fishCatch.weight
+                                    ) < 0.9
+                                      ? 'bg-red-500 text-white hover:bg-red-500'
+                                      : calculateFultonFactor(
+                                          fishCatch.length,
+                                          fishCatch.weight
+                                        ) < 0.95
+                                      ? 'bg-neutral-500 text-white hover:bg-neutral-500'
+                                      : calculateFultonFactor(
+                                          fishCatch.length,
+                                          fishCatch.weight
+                                        ) < 1.1
+                                      ? 'bg-green-500 text-white hover:bg-green-500'
+                                      : 'bg-yellow-500 text-black hover:bg-yellow-500'
+                                  }`}
+                                >
+                                  {calculateFultonFactor(
                                     fishCatch.length,
                                     fishCatch.weight
                                   ) < 0.9
-                                    ? 'bg-red-500 text-white hover:bg-red-500'
+                                    ? 'Underweight'
                                     : calculateFultonFactor(
                                         fishCatch.length,
                                         fishCatch.weight
                                       ) < 0.95
-                                    ? 'bg-neutral-500 text-white hover:bg-neutral-500'
+                                    ? 'Average'
                                     : calculateFultonFactor(
                                         fishCatch.length,
                                         fishCatch.weight
                                       ) < 1.1
-                                    ? 'bg-green-500 text-white hover:bg-green-500'
-                                    : 'bg-yellow-500 text-black hover:bg-yellow-500'
-                                }`}
-                              >
-                                {calculateFultonFactor(
-                                  fishCatch.length,
-                                  fishCatch.weight
-                                ) < 0.9
-                                  ? 'Underweight'
-                                  : calculateFultonFactor(
-                                      fishCatch.length,
-                                      fishCatch.weight
-                                    ) < 0.95
-                                  ? 'Average'
-                                  : calculateFultonFactor(
-                                      fishCatch.length,
-                                      fishCatch.weight
-                                    ) < 1.1
-                                  ? 'Healthy'
-                                  : 'Overweight'}
-                              </Badge>
-                            </div>
+                                    ? 'Healthy'
+                                    : 'Overweight'}
+                                </Badge>
+                              </div>
+                            )}
                           </div>
                         )}
                       </CardContent>
