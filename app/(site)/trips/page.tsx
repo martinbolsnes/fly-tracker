@@ -343,7 +343,7 @@ export default function TripsPage() {
             <SelectTrigger className='w-[180px]'>
               <SelectValue placeholder='Sort by' />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className='border border-border'>
               <SelectItem value='date'>Date</SelectItem>
               <SelectItem value='location'>Location</SelectItem>
             </SelectContent>
@@ -354,7 +354,7 @@ export default function TripsPage() {
             <SelectTrigger className='w-[180px]'>
               <SelectValue placeholder='Sort order' />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className='border border-border'>
               <SelectItem value='asc'>Ascending</SelectItem>
               <SelectItem value='desc'>Descending</SelectItem>
             </SelectContent>
@@ -494,6 +494,22 @@ export default function TripsPage() {
             <div className='flex flex-col gap-4 py-4'>
               <div className='flex flex-row gap-4'>
                 <div className='items-center gap-4'>
+                  <label htmlFor='location' className='text-left'>
+                    Location
+                  </label>
+                  <Input
+                    id='location'
+                    placeholder='Location'
+                    value={editingTrip?.location}
+                    onChange={(e) =>
+                      setEditingTrip((prev) =>
+                        prev ? { ...prev, location: e.target.value } : null
+                      )
+                    }
+                    className='text-base'
+                  />
+                </div>
+                <div className='items-center gap-4'>
                   <label htmlFor='date' className='text-left'>
                     Date
                   </label>
@@ -510,6 +526,8 @@ export default function TripsPage() {
                     className='text-base'
                   />
                 </div>
+              </div>
+              <div className='flex flex-row gap-4'>
                 <div className=' items-center gap-4'>
                   <label htmlFor='time_of_day' className='text-left'>
                     Time of Day
@@ -532,24 +550,6 @@ export default function TripsPage() {
                       <SelectItem value='Night'>Night</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-              </div>
-              <div className='flex flex-row gap-4'>
-                <div className='items-center gap-4'>
-                  <label htmlFor='location' className='text-left'>
-                    Location
-                  </label>
-                  <Input
-                    id='location'
-                    placeholder='Location'
-                    value={editingTrip?.location}
-                    onChange={(e) =>
-                      setEditingTrip((prev) =>
-                        prev ? { ...prev, location: e.target.value } : null
-                      )
-                    }
-                    className='text-base'
-                  />
                 </div>
                 <div className=' items-center gap-4'>
                   <label htmlFor='weather' className='text-left'>
