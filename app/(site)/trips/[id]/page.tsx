@@ -130,9 +130,11 @@ export default function TripPage() {
               />
             </AspectRatio>
           ) : (
-            <div className='flex items-center justify-center h-full bg-background'>
-              <GiFishingPole color='primary' className='w-12 h-12' />
-            </div>
+            <AspectRatio ratio={16 / 9}>
+              <div className='flex items-center justify-center h-full bg-background'>
+                <GiFishingPole color='primary' className='w-12 h-12' />
+              </div>
+            </AspectRatio>
           )}
           <div className='absolute top-10 right-2'>
             <Badge variant='secondary'>
