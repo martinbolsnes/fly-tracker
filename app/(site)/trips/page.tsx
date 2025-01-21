@@ -47,6 +47,8 @@ type FishCatch = {
   id: string;
   fish_type: string;
   caught_on: string;
+  length?: number;
+  weight?: number;
 };
 
 type FishingTrip = {
@@ -63,6 +65,10 @@ type FishingTrip = {
 };
 
 const BUCKET_NAME = 'trip-images';
+
+const calculateFultonFactor = (length: number, weight: number): number => {
+  return (weight / Math.pow(length / 10, 3)) * 100;
+};
 
 export default function TripsPage() {
   const [trips, setTrips] = useState<FishingTrip[]>([]);
@@ -266,6 +272,8 @@ export default function TripsPage() {
             .update({
               fish_type: fishCatch.fish_type,
               caught_on: fishCatch.caught_on,
+              length: fishCatch.length || null,
+              weight: fishCatch.weight || null,
             })
             .eq('id', fishCatch.id);
 
@@ -277,6 +285,8 @@ export default function TripsPage() {
               trip_id: editingTrip.id,
               fish_type: fishCatch.fish_type,
               caught_on: fishCatch.caught_on,
+              length: fishCatch.length || null,
+              weight: fishCatch.weight || null,
             });
 
           if (catchError) throw catchError;
@@ -305,7 +315,7 @@ export default function TripsPage() {
   if (loading) {
     return (
       <div className='flex justify-center items-center h-screen'>
-        <LoadingSpinner fill='primary' />
+        <LoadingSpinner fill='fill-primary' />
       </div>
     );
   }
@@ -381,25 +391,27 @@ export default function TripsPage() {
               key={trip.id}
               className='flex flex-col overflow-hidden border border-border'
             >
-              <div className='relative h-48'>
-                {trip.image_url ? (
-                  <Image
-                    src={trip.image_url || '/placeholder.svg'}
-                    alt={`Trip to ${trip.location}`}
-                    layout='fill'
-                    objectFit='cover'
-                  />
-                ) : (
-                  <div className='flex items-center justify-center h-full bg-background'>
-                    <GiFishingPole color='primary' className='w-12 h-12' />
+              <Link key={trip.id} href={`/trips/${trip.id}`}>
+                <div className='relative h-48'>
+                  {trip.image_url ? (
+                    <Image
+                      src={trip.image_url || '/placeholder.svg'}
+                      alt={`Trip to ${trip.location}`}
+                      layout='fill'
+                      objectFit='cover'
+                    />
+                  ) : (
+                    <div className='flex items-center justify-center h-full bg-background'>
+                      <GiFishingPole color='primary' className='w-12 h-12' />
+                    </div>
+                  )}
+                  <div className='absolute top-2 right-2'>
+                    <Badge variant='secondary'>
+                      {new Date(trip.date).toLocaleDateString()}
+                    </Badge>
                   </div>
-                )}
-                <div className='absolute top-2 right-2'>
-                  <Badge variant='secondary'>
-                    {new Date(trip.date).toLocaleDateString()}
-                  </Badge>
                 </div>
-              </div>
+              </Link>
               <CardHeader>
                 <CardTitle>{trip.location}</CardTitle>
               </CardHeader>
@@ -413,25 +425,21 @@ export default function TripsPage() {
                     <Clock className='h-4 w-4 mr-2 text-primary' />
                     {trip.time_of_day}
                   </div>
-                  <div className='flex items-center mt-2'>
+                  <div className='flex mt-2'>
                     <FishSymbol className='h-4 w-4 mr-2 text-primary' />
                     {trip.catch_count}
                     {trip.catch_count === 1 ? ' fish' : ' fishes'} caught
                   </div>
                   {trip.fish_catches.length > 0 && (
                     <div className='mt-2'>
-                      {trip.fish_catches.length > 0 && (
-                        <ul className='list-disc list-inside'>
-                          {trip.fish_catches.map(
-                            (fishCatch, index) =>
-                              fishCatch.fish_type &&
-                              fishCatch.caught_on && (
-                                <li key={index} className='text-foreground/80'>
-                                  {`${fishCatch.fish_type} (${fishCatch.caught_on})`}
-                                </li>
-                              )
-                          )}
-                        </ul>
+                      {trip.fish_catches.map(
+                        (fishCatch, index) =>
+                          fishCatch.fish_type &&
+                          fishCatch.caught_on && (
+                            <li key={index} className='text-foreground/80'>
+                              {`${fishCatch.fish_type} (${fishCatch.caught_on})`}
+                            </li>
+                          )
                       )}
                     </div>
                   )}
@@ -521,7 +529,7 @@ export default function TripsPage() {
                     <SelectTrigger>
                       <SelectValue placeholder='Select time of day' />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className='text-base border border-border'>
                       <SelectItem value='Morning'>Morning</SelectItem>
                       <SelectItem value='Afternoon'>Afternoon</SelectItem>
                       <SelectItem value='Evening'>Evening</SelectItem>
@@ -581,38 +589,92 @@ export default function TripsPage() {
                 />
               </div>
               <div className='col-span-4'>
-                <label className='text-left'>Fish Catches</label>
+                <h3 className='text-lg'>Fish Catches</h3>
+
                 {editingTrip?.fish_catches.map((fishCatch, index) => (
-                  <div
-                    key={index}
-                    className='grid grid-cols-4 items-center gap-4 mb-2'
-                  >
-                    <Input
-                      value={fishCatch.fish_type}
-                      onChange={(e) =>
-                        setEditingTrip((prev) => {
-                          if (!prev) return null;
-                          const newCatches = [...prev.fish_catches];
-                          newCatches[index].fish_type = e.target.value;
-                          return { ...prev, fish_catches: newCatches };
-                        })
-                      }
-                      placeholder='Fish type'
-                      className='col-span-2 text-base'
-                    />
-                    <Input
-                      value={fishCatch.caught_on}
-                      onChange={(e) =>
-                        setEditingTrip((prev) => {
-                          if (!prev) return null;
-                          const newCatches = [...prev.fish_catches];
-                          newCatches[index].caught_on = e.target.value;
-                          return { ...prev, fish_catches: newCatches };
-                        })
-                      }
-                      placeholder='Fly used'
-                      className='col-span-2 text-base'
-                    />
+                  <div key={index} className='grid grid-cols-2 gap-4 mb-2'>
+                    <div>
+                      <label htmlFor='fish_type' className='text-left'>
+                        Fish Type
+                      </label>
+                      <Input
+                        id='fish_type'
+                        value={fishCatch.fish_type || ''}
+                        onChange={(e) =>
+                          setEditingTrip((prev) => {
+                            if (!prev) return null;
+                            const newCatches = [...prev.fish_catches];
+                            newCatches[index].fish_type = e.target.value;
+                            return { ...prev, fish_catches: newCatches };
+                          })
+                        }
+                        placeholder='Fish type'
+                        className='text-base'
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='caught_on' className='text-left'>
+                        Fly used
+                      </label>
+                      <Input
+                        id='Fly used'
+                        value={fishCatch.caught_on || ''}
+                        onChange={(e) =>
+                          setEditingTrip((prev) => {
+                            if (!prev) return null;
+                            const newCatches = [...prev.fish_catches];
+                            newCatches[index].caught_on = e.target.value;
+                            return { ...prev, fish_catches: newCatches };
+                          })
+                        }
+                        placeholder='Fly used'
+                        className='text-base'
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='length' className='text-left'>
+                        Length (cm)
+                      </label>
+                      <Input
+                        id='length'
+                        type='number'
+                        value={fishCatch.length || ''}
+                        onChange={(e) =>
+                          setEditingTrip((prev) => {
+                            if (!prev) return null;
+                            const newCatches = [...prev.fish_catches];
+                            newCatches[index].length = parseFloat(
+                              e.target.value
+                            );
+                            return { ...prev, fish_catches: newCatches };
+                          })
+                        }
+                        placeholder='Length (cm)'
+                        className='text-base'
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='weight' className='text-left'>
+                        Weight (kg)
+                      </label>
+                      <Input
+                        id='weight'
+                        type='number'
+                        value={fishCatch.weight || ''}
+                        onChange={(e) =>
+                          setEditingTrip((prev) => {
+                            if (!prev) return null;
+                            const newCatches = [...prev.fish_catches];
+                            newCatches[index].weight = parseFloat(
+                              e.target.value
+                            );
+                            return { ...prev, fish_catches: newCatches };
+                          })
+                        }
+                        placeholder='Weight (kg)'
+                        className='text-base'
+                      />
+                    </div>
                   </div>
                 ))}
                 <Button
@@ -624,7 +686,13 @@ export default function TripsPage() {
                             ...prev,
                             fish_catches: [
                               ...prev.fish_catches,
-                              { id: '', fish_type: '', caught_on: '' },
+                              {
+                                id: '',
+                                fish_type: '',
+                                caught_on: '',
+                                length: 0,
+                                weight: 0,
+                              },
                             ],
                           }
                         : null
