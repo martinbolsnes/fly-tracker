@@ -144,8 +144,8 @@ export default function TripPage() {
           </div>
         </div>
         <CardContent className='space-y-6'>
-          <div className='grid grid-cols-4 gap-4 mt-4'>
-            <div className='col-span-2 space-y-4'>
+          <div className='grid sm:grid-cols-4 grid-cols-1 gap-4 mt-4'>
+            <div className='sm:col-span-2 grid-cols-1 space-y-4'>
               <h3 className='text-lg font-semibold mb-2'>Trip Info</h3>
               <div className='flex items-center space-x-2'>
                 <CloudSunRain className='h-5 w-5 text-muted-foreground' />
@@ -171,7 +171,7 @@ export default function TripPage() {
             </div>
 
             {trip.fish_catches.length > 0 && (
-              <div className='col-span-2'>
+              <div className='sm:col-span-2 grid-cols-1'>
                 <h3 className='text-lg font-semibold mb-2'>Fish Catches</h3>
                 <div className='space-y-4'>
                   {trip.fish_catches.map((fishCatch) => (
