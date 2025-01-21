@@ -298,12 +298,12 @@ export default function AddNewTrip() {
             </div>
             <div>
               <label htmlFor='weight' className='text-left'>
-                Weight (kg)
+                Weight (g)
               </label>
               <Input
                 id='weight'
                 type='number'
-                placeholder='Weight (kg)'
+                placeholder='Weight (g)'
                 value={fishCatch.weight || ''}
                 onChange={(e) =>
                   updateFishCatch(index, 'weight', parseFloat(e.target.value))
