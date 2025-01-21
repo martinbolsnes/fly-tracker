@@ -1,7 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
@@ -104,12 +110,14 @@ export default function ProfilePage() {
   if (error) {
     return (
       <div className='flex justify-center items-center mx-auto h-screen'>
-        <div className='p-8 rounded-lg border border-border flex flex-col items-center'>
-          <h3 className='text-destructive mb-4 font-semibold'>
+        <Card className='border border-border flex flex-col items-center'>
+          <CardContent className='text-red-500 mb-4 font-semibold'>
             Error: {error}
-          </h3>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
-        </div>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={() => window.location.reload()}>Retry</Button>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
@@ -117,14 +125,16 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className='flex justify-center items-center mx-auto h-screen'>
-        <div className='p-8 rounded-lg border border-border flex flex-col items-center'>
-          <h3 className='text-lg font-semibold'>
+        <Card className='border border-border flex flex-col items-center'>
+          <CardContent className='text-lg font-semibold'>
             You need to log in to view your profile
-          </h3>
-          <Link href='/login'>
-            <Button className='mt-4'>Log in</Button>
-          </Link>
-        </div>
+          </CardContent>
+          <CardFooter>
+            <Link href='/login'>
+              <Button className='mt-4'>Log in</Button>
+            </Link>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
@@ -144,7 +154,12 @@ export default function ProfilePage() {
     (sum, trip) => sum + trip.fish_catches.length,
     0
   );
-  const uniqueLocations = new Set(trips.map((trip) => trip.location)).size;
+  const favoriteLocation = Object.entries(
+    trips.reduce((acc, trip) => {
+      acc[trip.location] = (acc[trip.location] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
+  ).sort((a, b) => b[1] - a[1])[0][0];
 
   const fishCounts = trips.reduce((acc, trip) => {
     const fishList = trip.fish_catches.map((fish) => fish.fish_type.trim());
@@ -249,12 +264,14 @@ export default function ProfilePage() {
         <Card className='bg-card border border-border'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-normal tracking-tight'>
-              Unique Locations
+              Favorite Location
             </CardTitle>
             <MapPin className='h-4 w-4' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{uniqueLocations}</div>
+            <div className='text-2xl font-bold'>
+              {favoriteLocation || 'No data'}
+            </div>
           </CardContent>
         </Card>
       </div>
