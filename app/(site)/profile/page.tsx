@@ -141,12 +141,40 @@ export default function ProfilePage() {
 
   if (trips.length === 0) {
     return (
-      <div className='flex flex-col justify-center items-center min-h-screen'>
-        <p>No fishing trips logged yet. Start logging your trips!</p>
-        <Link href='/logbook'>
-          <Button className='mt-4'>Log a trip</Button>
-        </Link>
-      </div>
+      <main className='container mx-auto px-4 py-8 bg-background'>
+        <Card className='mb-8 bg-card border border-border'>
+          <CardHeader>
+            <div className='flex items-center justify-between space-x-4'>
+              <div className='flex items-center space-x-4'>
+                <Avatar className='h-20 w-20'>
+                  <AvatarImage
+                    src={user.user_metadata.avatar_url}
+                    alt={user.user_metadata.full_name}
+                  />
+                  <AvatarFallback>
+                    {user.user_metadata.full_name
+                      .split(' ')
+                      .map((n: string) => n[0])
+                      .join('')}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle className='text-2xl'>
+                    {user.user_metadata.full_name}
+                  </CardTitle>
+                  <p className='text-foreground/80'>{user.email}</p>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
+        <div className='flex flex-col items-center h-screen'>
+          <p>No fishing trips logged yet. Start logging your trips!</p>
+          <Link href='/logbook'>
+            <Button className='mt-4'>Log a trip</Button>
+          </Link>
+        </div>
+      </main>
     );
   }
 
