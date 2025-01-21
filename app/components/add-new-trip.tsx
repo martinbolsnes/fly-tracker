@@ -20,6 +20,8 @@ import { LoadingSpinner } from './LoadingSpinner';
 type FishCatch = {
   fish_type: string;
   caught_on: string;
+  length?: number;
+  weight?: number;
 };
 
 type FishingTrip = {
@@ -34,12 +36,16 @@ type FishingTrip = {
   catch_count: number;
 };
 
+const initialFishCatch = {
+  fish_type: '',
+  caught_on: '',
+  length: 0,
+  weight: 0,
+};
+
 export default function AddNewTrip() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [fishCatches, setFishCatches] = useState<FishCatch[]>([
-    { fish_type: '', caught_on: '' },
-  ]);
   const [newTrip, setNewTrip] = useState<Omit<FishingTrip, 'id' | 'user_id'>>({
     date: '',
     time_of_day: '',
@@ -49,6 +55,9 @@ export default function AddNewTrip() {
     image_url: null,
     catch_count: 0,
   });
+  const [fishCatches, setFishCatches] = useState<FishCatch[]>([
+    initialFishCatch,
+  ]);
   const supabase = createClient();
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -76,7 +85,6 @@ export default function AddNewTrip() {
     };
 
     try {
-      // Insert trip data
       const { data: insertedTripData, error: tripError } = await supabase
         .from('fishing_trips')
         .insert([tripData])
@@ -96,6 +104,8 @@ export default function AddNewTrip() {
           trip_id: tripId,
           fish_type: fishCatch.fish_type,
           caught_on: fishCatch.caught_on,
+          length: fishCatch.length || null,
+          weight: fishCatch.weight || null,
         }));
 
         const { error: catchesError } = await supabase
@@ -131,108 +141,188 @@ export default function AddNewTrip() {
   };
 
   const addFishCatch = () => {
-    setFishCatches([...fishCatches, { fish_type: '', caught_on: '' }]);
-  };
-
-  const removeFishCatch = (index: number) => {
-    setFishCatches(fishCatches.filter((_, i) => i !== index));
+    setFishCatches([...fishCatches, initialFishCatch]);
   };
 
   const updateFishCatch = (
     index: number,
     field: keyof FishCatch,
-    value: string
+    value: number | string | null
   ) => {
-    const updatedCatches = [...fishCatches];
-    updatedCatches[index][field] = value;
-    setFishCatches(updatedCatches);
+    setFishCatches((prevFishCatches) => {
+      const updatedFishCatches = [...prevFishCatches];
+      updatedFishCatches[index] = {
+        ...updatedFishCatches[index],
+        [field]: value,
+      };
+      return updatedFishCatches;
+    });
+  };
+
+  const removeFishCatch = (index: number) => {
+    const updatedFishCatches = fishCatches.filter((_, i) => i !== index);
+    setFishCatches(updatedFishCatches);
   };
 
   return (
     <form onSubmit={handleSubmit} className='space-y-4'>
-      <Input
-        type='date'
-        name='date'
-        required
-        value={newTrip.date}
-        onChange={handleInputChange}
-        className='text-base'
-      />
-      <Select
-        name='time_of_day'
-        required
-        value={newTrip.time_of_day}
-        onValueChange={(value) =>
-          setNewTrip({ ...newTrip, time_of_day: value })
-        }
-      >
-        <SelectTrigger>
-          <SelectValue placeholder='Time of day' />
-        </SelectTrigger>
-        <SelectContent className='text-base border border-border'>
-          <SelectItem value='Morning'>Morning</SelectItem>
-          <SelectItem value='Afternoon'>Afternoon</SelectItem>
-          <SelectItem value='Evening'>Evening</SelectItem>
-          <SelectItem value='Night'>Night</SelectItem>
-        </SelectContent>
-      </Select>
-      <Input
-        type='text'
-        name='location'
-        placeholder='Location'
-        required
-        value={newTrip.location}
-        onChange={handleInputChange}
-        className='text-base'
-      />
-      <Input
-        type='text'
-        name='weather'
-        placeholder='Weather'
-        required
-        value={newTrip.weather}
-        onChange={handleInputChange}
-        className='text-base'
-      />
-      <Textarea
-        name='notes'
-        placeholder='Notes'
-        value={newTrip.notes || ''}
-        onChange={(e) => setNewTrip({ ...newTrip, notes: e.target.value })}
-        className='text-base'
-      />
+      <h2 className='text-2xl'>Add New Trip</h2>
+      <div className='grid grid-cols-1 gap-4 mb-2'>
+        <div>
+          <label htmlFor='date' className='text-left'>
+            Date
+          </label>
+          <Input
+            type='date'
+            name='date'
+            required
+            value={newTrip.date}
+            onChange={handleInputChange}
+            className='text-base'
+          />
+        </div>
+        <div>
+          <label htmlFor='time_of_day' className='text-left'>
+            Time of day
+          </label>
+          <Select
+            name='time_of_day'
+            required
+            value={newTrip.time_of_day}
+            onValueChange={(value) =>
+              setNewTrip({ ...newTrip, time_of_day: value })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder='Time of day' />
+            </SelectTrigger>
+            <SelectContent className='text-base border border-border'>
+              <SelectItem value='Morning'>Morning</SelectItem>
+              <SelectItem value='Afternoon'>Afternoon</SelectItem>
+              <SelectItem value='Evening'>Evening</SelectItem>
+              <SelectItem value='Night'>Night</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <label htmlFor='location' className='text-left'>
+            Location
+          </label>
+          <Input
+            type='text'
+            name='location'
+            placeholder='Location'
+            required
+            value={newTrip.location}
+            onChange={handleInputChange}
+            className='text-base'
+          />
+        </div>
+        <div>
+          <label htmlFor='weather' className='text-left'>
+            Weather
+          </label>
+          <Input
+            type='text'
+            name='weather'
+            placeholder='Weather'
+            required
+            value={newTrip.weather}
+            onChange={handleInputChange}
+            className='text-base'
+          />
+        </div>
+        <div>
+          <label htmlFor='notes' className='text-left'>
+            Notes
+          </label>
+          <Textarea
+            name='notes'
+            placeholder='Notes'
+            value={newTrip.notes || ''}
+            onChange={(e) => setNewTrip({ ...newTrip, notes: e.target.value })}
+            className='text-base'
+          />
+        </div>
+      </div>
 
       <div className='space-y-4'>
-        <h3 className='text-lg font-semibold'>Fish Catches</h3>
+        <h3 className='text-lg'>Fish Catches</h3>
         {fishCatches.map((fishCatch, index) => (
-          <div key={index} className='flex items-center space-x-2'>
-            <Input
-              type='text'
-              placeholder='Fish type'
-              value={fishCatch.fish_type}
-              onChange={(e) =>
-                updateFishCatch(index, 'fish_type', e.target.value)
-              }
-              className='text-base'
-            />
-            <Input
-              type='text'
-              placeholder='Fly used'
-              value={fishCatch.caught_on}
-              onChange={(e) =>
-                updateFishCatch(index, 'caught_on', e.target.value)
-              }
-              className='text-base'
-            />
-            {index > 0 && (
-              <Button
-                type='button'
-                variant='ghost'
-                size='icon'
-                onClick={() => removeFishCatch(index)}
-              >
-                <X className='h-4 w-4' />
-              </Button>
+          <div key={index} className='grid grid-cols-2 gap-4 mb-2'>
+            <div>
+              <label htmlFor='fish_type' className='text-left'>
+                Fish Type
+              </label>
+              <Input
+                id='fish_type'
+                type='text'
+                placeholder='Fish type'
+                value={fishCatch.fish_type || ''}
+                onChange={(e) =>
+                  updateFishCatch(index, 'fish_type', e.target.value)
+                }
+                className='text-base'
+              />
+            </div>
+            <div>
+              <label htmlFor='caught_on' className='text-left'>
+                Fly used
+              </label>
+              <Input
+                id='fly_used'
+                type='text'
+                placeholder='Fly used'
+                value={fishCatch.caught_on || ''}
+                onChange={(e) =>
+                  updateFishCatch(index, 'caught_on', e.target.value)
+                }
+                className='text-base'
+              />
+            </div>
+            <div>
+              <label htmlFor='length' className='text-left'>
+                Length (cm)
+              </label>
+              <Input
+                id='length'
+                type='number'
+                placeholder='Length (cm)'
+                value={fishCatch.length || ''}
+                onChange={(e) =>
+                  updateFishCatch(index, 'length', parseFloat(e.target.value))
+                }
+                className='text-base'
+              />
+            </div>
+            <div>
+              <label htmlFor='weight' className='text-left'>
+                Weight (kg)
+              </label>
+              <Input
+                id='weight'
+                type='number'
+                placeholder='Weight (kg)'
+                value={fishCatch.weight || ''}
+                onChange={(e) =>
+                  updateFishCatch(index, 'weight', parseFloat(e.target.value))
+                }
+                className='text-base'
+              />
+            </div>
+            {index > -1 && (
+              <div className='col-span-2'>
+                <Button
+                  type='button'
+                  variant='secondary'
+                  size='icon'
+                  className='w-full'
+                  onClick={() => removeFishCatch(index)}
+                >
+                  <X className='mr-2 h-4 w-4' />
+                  Remove Fish
+                </Button>
+              </div>
             )}
           </div>
         ))}
