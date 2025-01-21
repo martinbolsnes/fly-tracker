@@ -66,10 +66,6 @@ type FishingTrip = {
 
 const BUCKET_NAME = 'trip-images';
 
-const calculateFultonFactor = (length: number, weight: number): number => {
-  return (weight / Math.pow(length / 10, 3)) * 100;
-};
-
 export default function TripsPage() {
   const [trips, setTrips] = useState<FishingTrip[]>([]);
   const [loading, setLoading] = useState(true);
