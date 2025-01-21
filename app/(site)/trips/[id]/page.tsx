@@ -19,10 +19,10 @@ import { GiFishingPole } from 'react-icons/gi';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 type FishCatch = {
   id: string;
@@ -164,7 +164,7 @@ export default function TripPage() {
               </div>
               {trip.notes && (
                 <div>
-                  <h3 className='text-lg font-semibold mb-2'>Notes</h3>
+                  <h4 className='text-md font-semibold mb-2'>Notes</h4>
                   <p className='text-muted-foreground'>{trip.notes}</p>
                 </div>
               )}
@@ -188,11 +188,11 @@ export default function TripPage() {
                             <div>Length: {fishCatch.length} cm</div>
                             <div>Weight: {fishCatch.weight} kg</div>
                             <div className='col-span-2 flex items-center'>
-                              <HoverCard>
-                                <HoverCardTrigger asChild>
-                                  <Info className='w-4 h-4 mr-2' />
-                                </HoverCardTrigger>
-                                <HoverCardContent className='border border-border'>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Info className='w-4 h-4 mr-2 cursor-pointer' />
+                                </PopoverTrigger>
+                                <PopoverContent className='border border-border'>
                                   <p>
                                     The Fulton&apos;s K = (W / L^3) * 100, where
                                     W is the weight of the fish in grams and L
@@ -201,8 +201,8 @@ export default function TripPage() {
                                     condition of the fish. A healthy fish will
                                     have a K factor between 1 and 1.1.
                                   </p>
-                                </HoverCardContent>
-                              </HoverCard>
+                                </PopoverContent>
+                              </Popover>
                               Fulton&apos;s Factor:{' '}
                               {calculateFultonFactor(
                                 fishCatch.length,
