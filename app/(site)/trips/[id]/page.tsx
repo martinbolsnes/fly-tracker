@@ -23,6 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 type FishCatch = {
   id: string;
@@ -46,7 +47,7 @@ type FishingTrip = {
 };
 
 const calculateFultonFactor = (length: number, weight: number): number => {
-  return (weight / Math.pow(length / 10, 3)) * 100;
+  return (weight / Math.pow(length, 3)) * 100;
 };
 
 export default function TripPage() {
@@ -117,14 +118,16 @@ export default function TripPage() {
         </Button>
       </Link>
       <Card className='flex flex-col overflow-hidden border border-border'>
-        <div className='relative h-80'>
+        <div className='relative'>
           {trip.image_url ? (
-            <Image
-              src={trip.image_url || '/placeholder.svg'}
-              alt={`Trip to ${trip.location}`}
-              layout='fill'
-              objectFit='cover'
-            />
+            <AspectRatio ratio={16 / 9}>
+              <Image
+                src={trip.image_url || '/placeholder.svg'}
+                alt={`Trip to ${trip.location}`}
+                layout='fill'
+                objectFit='cover'
+              />
+            </AspectRatio>
           ) : (
             <div className='flex items-center justify-center h-full bg-background'>
               <GiFishingPole color='primary' className='w-12 h-12' />
@@ -172,7 +175,7 @@ export default function TripPage() {
 
             {trip.fish_catches.length > 0 && (
               <div className='sm:col-span-2 grid-cols-1'>
-                <h3 className='text-lg font-semibold mb-2'>Fish Catches</h3>
+                <h3 className='text-lg font-semibold mb-2'>Catches</h3>
                 <div className='space-y-4'>
                   {trip.fish_catches.map((fishCatch) => (
                     <Card key={fishCatch.id} className='border border-border'>
@@ -186,10 +189,18 @@ export default function TripPage() {
                         {fishCatch.length && fishCatch.weight && (
                           <div className='mt-2 grid grid-cols-2 gap-2'>
                             <div>Length: {fishCatch.length} cm</div>
-                            <div>Weight: {fishCatch.weight} kg</div>
-                            {fishCatch.fish_type
+                            <div>
+                              Weight:{' '}
+                              {fishCatch.weight >= 1000
+                                ? (fishCatch.weight / 1000).toFixed(2) + ' kg'
+                                : fishCatch.weight + ' g'}
+                            </div>
+                            {(fishCatch.fish_type
                               .toLowerCase()
-                              .includes('trout') && (
+                              .includes('trout') ||
+                              fishCatch.fish_type
+                                .toLowerCase()
+                                .includes('ørret')) && (
                               <div className='col-span-2 flex items-center'>
                                 <Popover>
                                   <PopoverTrigger asChild>
@@ -213,9 +224,12 @@ export default function TripPage() {
                                 ).toFixed(2)}
                               </div>
                             )}
-                            {fishCatch.fish_type
+                            {(fishCatch.fish_type
                               .toLowerCase()
-                              .includes('trout') && (
+                              .includes('trout') ||
+                              fishCatch.fish_type
+                                .toLowerCase()
+                                .includes('ørret')) && (
                               <div>
                                 <Badge
                                   variant='secondary'
@@ -233,26 +247,36 @@ export default function TripPage() {
                                       : calculateFultonFactor(
                                           fishCatch.length,
                                           fishCatch.weight
-                                        ) < 1.1
+                                        ) < 1.06
+                                      ? 'bg-green-600 text-white hover:bg-green-600'
+                                      : calculateFultonFactor(
+                                          fishCatch.length,
+                                          fishCatch.weight
+                                        ) < 1.16
                                       ? 'bg-green-500 text-white hover:bg-green-500'
-                                      : 'bg-yellow-500 text-black hover:bg-yellow-500'
+                                      : 'bg-red-400 text-black hover:bg-red-400'
                                   }`}
                                 >
                                   {calculateFultonFactor(
                                     fishCatch.length,
                                     fishCatch.weight
-                                  ) < 0.9
+                                  ) < 0.91
                                     ? 'Underweight'
                                     : calculateFultonFactor(
                                         fishCatch.length,
                                         fishCatch.weight
-                                      ) < 0.95
+                                      ) < 0.96
                                     ? 'Average'
                                     : calculateFultonFactor(
                                         fishCatch.length,
                                         fishCatch.weight
-                                      ) < 1.1
+                                      ) < 1.06
                                     ? 'Healthy'
+                                    : calculateFultonFactor(
+                                        fishCatch.length,
+                                        fishCatch.weight
+                                      ) < 1.16
+                                    ? 'Very Healthy'
                                     : 'Overweight'}
                                 </Badge>
                               </div>
