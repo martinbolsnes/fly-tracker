@@ -169,6 +169,20 @@ export default function AddNewTrip() {
       <h2 className='text-2xl'>Add New Trip</h2>
       <div className='grid grid-cols-1 gap-4 mb-2'>
         <div>
+          <label htmlFor='location' className='text-left'>
+            Location
+          </label>
+          <Input
+            type='text'
+            name='location'
+            placeholder='Location'
+            required
+            value={newTrip.location}
+            onChange={handleInputChange}
+            className='text-base'
+          />
+        </div>
+        <div>
           <label htmlFor='date' className='text-left'>
             Date
           </label>
@@ -204,20 +218,7 @@ export default function AddNewTrip() {
             </SelectContent>
           </Select>
         </div>
-        <div>
-          <label htmlFor='location' className='text-left'>
-            Location
-          </label>
-          <Input
-            type='text'
-            name='location'
-            placeholder='Location'
-            required
-            value={newTrip.location}
-            onChange={handleInputChange}
-            className='text-base'
-          />
-        </div>
+
         <div>
           <label htmlFor='weather' className='text-left'>
             Weather
@@ -338,7 +339,7 @@ export default function AddNewTrip() {
       </div>
 
       <Button type='submit' disabled={loading}>
-        {loading ? <LoadingSpinner /> : 'Add Trip'}
+        {loading ? <LoadingSpinner /> : 'Log Trip'}
       </Button>
     </form>
   );
