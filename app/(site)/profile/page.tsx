@@ -260,7 +260,7 @@ export default function ProfilePage() {
                     <Input
                       value={newUsername}
                       onChange={(e) => setNewUsername(e.target.value)}
-                      className='mb-2'
+                      className='mb-2 text-base'
                     />
                   ) : (
                     <>
@@ -393,7 +393,7 @@ export default function ProfilePage() {
                   <Input
                     value={newUsername}
                     onChange={(e) => setNewUsername(e.target.value)}
-                    className='mb-2'
+                    className='mb-2 text-base'
                   />
                 ) : (
                   <>
@@ -440,7 +440,7 @@ export default function ProfilePage() {
             </Button>
           )}
         </div>
-        <div className='flex items-center space-x-2'>
+        <div className='flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0'>
           <Link href='/trips'>
             <Button variant='outline'>View All Trips</Button>
           </Link>
