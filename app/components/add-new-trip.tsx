@@ -339,7 +339,7 @@ export default function AddNewTrip() {
       </div>
 
       <Button type='submit' disabled={loading}>
-        {loading ? <LoadingSpinner /> : 'Log Trip'}
+        {loading ? <LoadingSpinner fill='fill-primary' /> : 'Log Trip'}
       </Button>
     </form>
   );
