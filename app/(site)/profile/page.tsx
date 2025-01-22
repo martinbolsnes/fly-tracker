@@ -163,7 +163,7 @@ export default function ProfilePage() {
       const fileExt = file.name.split('.').pop();
       const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
-      const { error: uploadError, data } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file);
 
