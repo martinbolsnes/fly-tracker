@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { FishSymbol, MapPin, Calendar } from 'lucide-react';
+import { FishSymbol, MapPin, Calendar, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import {
@@ -33,6 +33,15 @@ import {
   LineChart,
   CartesianGrid,
 } from 'recharts';
+import { toast } from '@/components/hooks/use-toast';
+import { Input } from '@/components/ui/input';
+import { FishingStatistics } from '@/app/components/stastistics';
+
+type Profile = {
+  id: string;
+  username: string;
+  avatar_url: string | null;
+};
 
 type FishCatch = {
   fish_type: string;
@@ -55,6 +64,9 @@ type FishingTrip = {
 export default function ProfilePage() {
   const [trips, setTrips] = useState<FishingTrip[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [newUsername, setNewUsername] = useState('');
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
@@ -67,6 +79,20 @@ export default function ProfilePage() {
       } = await supabase.auth.getUser();
       if (user) {
         setUser(user);
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          console.error('Error fetching profile:', profileError);
+          setError(profileError.message);
+        } else {
+          setProfile(profileData);
+          setNewUsername(profileData.username);
+        }
+
         const { data: tripsData, error: tripsError } = await supabase
           .from('fishing_trips')
           .select('*')
@@ -98,6 +124,77 @@ export default function ProfilePage() {
 
     fetchUserAndTrips();
   }, [router]);
+
+  const handleUpdateProfile = async () => {
+    if (!user || !profile) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ username: newUsername })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      setProfile({ ...profile, username: newUsername });
+      setEditMode(false);
+      toast({
+        title: 'Profile Updated',
+        description: 'Your profile has been successfully updated.',
+        variant: 'default',
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: 'Update Failed',
+        description: 'Failed to update profile. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleAvatarUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('avatars').getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      setProfile((prev) => (prev ? { ...prev, avatar_url: publicUrl } : null));
+      toast({
+        title: 'Avatar Updated',
+        description: 'Your profile picture has been successfully updated.',
+        variant: 'default',
+      });
+    } catch (error) {
+      console.error('Error uploading avatar:', error);
+      toast({
+        title: 'Upload Failed',
+        description: 'Failed to upload profile picture. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -148,8 +245,8 @@ export default function ProfilePage() {
               <div className='flex items-center space-x-4'>
                 <Avatar className='h-20 w-20'>
                   <AvatarImage
-                    src={user.user_metadata.avatar_url}
-                    alt={user.user_metadata.full_name}
+                    src={profile?.avatar_url || ''}
+                    alt={profile?.username || ''}
                   />
                   <AvatarFallback>
                     {user.user_metadata.full_name
@@ -159,15 +256,58 @@ export default function ProfilePage() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className='text-2xl'>
-                    {user.user_metadata.full_name}
-                  </CardTitle>
-                  <p className='text-foreground/80'>{user.email}</p>
+                  {editMode ? (
+                    <Input
+                      value={newUsername}
+                      onChange={(e) => setNewUsername(e.target.value)}
+                      className='mb-2'
+                    />
+                  ) : (
+                    <>
+                      <CardTitle className='text-2xl'>
+                        {profile?.username || user.user_metadata.full_name}
+                      </CardTitle>
+                      <p className='text-foreground/80'>
+                        @{profile?.username || 'Username'}
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </CardHeader>
         </Card>
+        <div className='flex items-center justify-between mb-8'>
+          <div className='flex items-center space-x-2 '>
+            <label className='cursor-pointer'>
+              <Input
+                type='file'
+                className='hidden'
+                onChange={handleAvatarUpload}
+                accept='image/*'
+              />
+              <Button variant='outline' size='sm' asChild>
+                <span>
+                  <Upload className='h-4 w-4 mr-2' />
+                  Update Avatar
+                </span>
+              </Button>
+            </label>
+            {editMode ? (
+              <Button variant='default' size='sm' onClick={handleUpdateProfile}>
+                Save
+              </Button>
+            ) : (
+              <Button
+                variant='secondary'
+                size='sm'
+                onClick={() => setEditMode(true)}
+              >
+                Edit Profile
+              </Button>
+            )}
+          </div>
+        </div>
         <div className='flex flex-col items-center h-screen'>
           <p>No fishing trips logged yet. Start logging your trips!</p>
           <Link href='/logbook'>
@@ -238,8 +378,8 @@ export default function ProfilePage() {
             <div className='flex items-center space-x-4'>
               <Avatar className='h-20 w-20'>
                 <AvatarImage
-                  src={user.user_metadata.avatar_url}
-                  alt={user.user_metadata.full_name}
+                  src={profile?.avatar_url || ''}
+                  alt={profile?.username || ''}
                 />
                 <AvatarFallback>
                   {user.user_metadata.full_name
@@ -249,22 +389,65 @@ export default function ProfilePage() {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className='text-2xl'>
-                  {user.user_metadata.full_name}
-                </CardTitle>
-                <p className='text-foreground/80'>{user.email}</p>
+                {editMode ? (
+                  <Input
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    className='mb-2'
+                  />
+                ) : (
+                  <>
+                    <CardTitle className='text-2xl'>
+                      {user.user_metadata.full_name}
+                    </CardTitle>
+                    <p className='text-foreground/80'>
+                      @{profile?.username || 'Username'}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </CardHeader>
       </Card>
-      <div className='flex items-center justify-end space-x-4 mb-8'>
-        <Link href='/trips'>
-          <Button variant='outline'>View All Trips</Button>
-        </Link>
-        <Link href='/logbook'>
-          <Button>New Trip</Button>
-        </Link>
+      <div className='flex items-center justify-between mb-8'>
+        <div className='flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0'>
+          <label className='cursor-pointer'>
+            <Input
+              type='file'
+              className='hidden'
+              onChange={handleAvatarUpload}
+              accept='image/*'
+            />
+            <Button variant='outline' size='sm' asChild>
+              <span>
+                <Upload className='h-4 w-4 mr-2' />
+                Update Avatar
+              </span>
+            </Button>
+          </label>
+          {editMode ? (
+            <Button variant='default' size='sm' onClick={handleUpdateProfile}>
+              Save
+            </Button>
+          ) : (
+            <Button
+              variant='secondary'
+              size='sm'
+              onClick={() => setEditMode(true)}
+            >
+              Edit Profile
+            </Button>
+          )}
+        </div>
+        <div className='flex items-center space-x-2'>
+          <Link href='/trips'>
+            <Button variant='outline'>View All Trips</Button>
+          </Link>
+          <Link href='/logbook'>
+            <Button>New Trip</Button>
+          </Link>
+        </div>
       </div>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <Card className='bg-card border border-border'>
@@ -429,6 +612,7 @@ export default function ProfilePage() {
           </ChartContainer>
         </CardContent>
       </Card>
+      <FishingStatistics userId={user.id} />
     </main>
   );
 }
