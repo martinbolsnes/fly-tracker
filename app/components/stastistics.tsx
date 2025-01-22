@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FishSymbol, Clock, CloudSunRain, Scale } from 'lucide-react';
+import { FishSymbol, Clock, Scale } from 'lucide-react';
 
 type FishCatch = {
   fish_type: string;
