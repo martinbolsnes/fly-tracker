@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Flyfish Logbook
+
+Flyfish Logbook is a web application for logging and managing your fishing trips. Built with [Next.js](https://nextjs.org), it allows users to record details about their fishing trips, including locations, weather conditions, fish catches, and more.
+
+## Features
+
+- User authentication and profile management
+- Log fishing trips with details such as date, location, weather, and notes
+- Upload and manage trip images
+- View and edit logged trips
+- Sort and filter trips by date and location
+- Responsive design
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (version 14 or later)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+### Installation
+
+1. Clone the repository:
 
 ```bash
+git clone https://github.com/martinbolsnes/flyfish-logbook.git
+cd flyfish-logbook
+
+### Install dependecies
+
+npm install
+# or
+yarn install
+
+### Enviroment Variables
+
+Create a .env.local file in the root of your project and add the following environment variables:
+
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+Replace your-supabase-url and your-supabase-anon-key with your actual Supabase project URL and anonymous key.
+
+### Running the dev server
+
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+Open http://localhost:3000 with your browser to see the result.
+
+
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
