@@ -34,6 +34,8 @@ type FishingTrip = {
   notes: string | null;
   image_url: string | null;
   catch_count: number;
+  water_temperature?: number | null;
+  air_temperature?: number | null;
 };
 
 const initialFishCatch = {
@@ -54,6 +56,8 @@ export default function AddNewTrip() {
     notes: '',
     image_url: null,
     catch_count: 0,
+    water_temperature: null,
+    air_temperature: null,
   });
   const [fishCatches, setFishCatches] = useState<FishCatch[]>([
     initialFishCatch,
@@ -234,6 +238,42 @@ export default function AddNewTrip() {
           />
         </div>
         <div>
+          <label htmlFor='water_temperture' className='text-left'>
+            Water Temperature (°C)
+          </label>
+          <Input
+            type='number'
+            name='water_temperture'
+            placeholder='Water Temperature'
+            value={newTrip.water_temperature || ''}
+            onChange={(e) =>
+              setNewTrip({
+                ...newTrip,
+                water_temperature: parseFloat(e.target.value) || null,
+              })
+            }
+            className='text-base'
+          />
+        </div>
+        <div>
+          <label htmlFor='air_temperature' className='text-left'>
+            Air Temperature (°C)
+          </label>
+          <Input
+            type='number'
+            name='air_temperature'
+            placeholder='Air Temperature'
+            value={newTrip.air_temperature || ''}
+            onChange={(e) =>
+              setNewTrip({
+                ...newTrip,
+                air_temperature: parseFloat(e.target.value) || null,
+              })
+            }
+            className='text-base'
+          />
+        </div>
+        <div>
           <label htmlFor='notes' className='text-left'>
             Notes
           </label>
@@ -271,9 +311,9 @@ export default function AddNewTrip() {
                 Fly used
               </label>
               <Input
-                id='fly_used'
+                id='caught_on'
                 type='text'
-                placeholder='Fly used'
+                placeholder='Caught on'
                 value={fishCatch.caught_on || ''}
                 onChange={(e) =>
                   updateFishCatch(index, 'caught_on', e.target.value)
@@ -291,7 +331,11 @@ export default function AddNewTrip() {
                 placeholder='Length (cm)'
                 value={fishCatch.length || ''}
                 onChange={(e) =>
-                  updateFishCatch(index, 'length', parseFloat(e.target.value))
+                  updateFishCatch(
+                    index,
+                    'length',
+                    parseFloat(e.target.value) || null
+                  )
                 }
                 className='text-base'
               />
@@ -306,7 +350,11 @@ export default function AddNewTrip() {
                 placeholder='Weight (g)'
                 value={fishCatch.weight || ''}
                 onChange={(e) =>
-                  updateFishCatch(index, 'weight', parseFloat(e.target.value))
+                  updateFishCatch(
+                    index,
+                    'weight',
+                    parseFloat(e.target.value) || null
+                  )
                 }
                 className='text-base'
               />
