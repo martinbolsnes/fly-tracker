@@ -10,8 +10,8 @@ export type FishCatch = {
   id: string;
   fish_type: string;
   caught_on: string;
-  length?: number;
-  weight?: number;
+  length?: number | null;
+  weight?: number | null;
 };
 
 export type FishingTrip = {

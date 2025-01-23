@@ -31,8 +31,8 @@ const fishCatchSchema = z.object({
   id: z.string().optional(),
   fish_type: z.string().min(1, 'Fish type is required'),
   caught_on: z.string().optional(),
-  length: z.number().optional(),
-  weight: z.number().optional(),
+  length: z.number().nullable().optional(),
+  weight: z.number().nullable().optional(),
 });
 
 const formSchema = z.object({
@@ -64,6 +64,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
       time_of_day: trip?.time_of_day || '',
       weather: trip?.weather || '',
       notes: trip?.notes || '',
+      catch_count: trip?.catch_count || 0,
       fish_catches: trip?.fish_catches || [],
     },
   });
@@ -81,7 +82,8 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
         time_of_day: trip.time_of_day,
         weather: trip.weather,
         notes: trip.notes,
-        fish_catches: trip.fish_catches,
+        catch_count: trip.catch_count,
+        fish_catches: trip?.fish_catches,
       });
     }
   }, [trip, form]);
@@ -263,7 +265,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                   placeholder='Enter any additional notes about the trip'
                   className='resize-none text-base'
                   {...field}
-                  value={field.value ?? ''}
+                  value={field.value !== null ? field.value : ''}
                 />
               </FormControl>
               <FormMessage />
@@ -314,6 +316,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                         className='text-base'
                         type='number'
                         {...field}
+                        value={field.value ?? ''}
                         onChange={(e) =>
                           field.onChange(
                             e.target.value ? parseFloat(e.target.value) : ''
@@ -336,6 +339,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                         className='text-base'
                         type='number'
                         {...field}
+                        value={field.value !== null ? field.value : ''}
                         onChange={(e) =>
                           field.onChange(
                             e.target.value ? parseFloat(e.target.value) : ''
