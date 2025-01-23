@@ -236,45 +236,62 @@ export function FishingStatistics({ userId }: { userId: string }) {
 
   return (
     <>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <Card className='bg-card border border-border'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 my-8'>
+        <Card className='border border-border'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-normal tracking-tight'>
-              Total Trips
-            </CardTitle>
-            <Calendar className='h-4 w-4' />
+            <CardTitle className='text-sm font-medium'>Largest Fish</CardTitle>
+            <Scale className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{stats.totalTrips}</div>
+            <div className='text-2xl font-bold'>{stats.largestFish.type}</div>
+            <p className='text-xs text-muted-foreground'>
+              {stats.largestFish.length} cm, {stats.largestFish.weight} g
+            </p>
           </CardContent>
         </Card>
-        <Card className='bg-card border border-border'>
+        <Card className='border border-border'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-normal tracking-tight'>
-              Total Catches
-            </CardTitle>
-            <FishSymbol className='h-4 w-4' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{stats.totalCatches}</div>
-          </CardContent>
-        </Card>
-        <Card className='bg-card border border-border'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-normal tracking-tight'>
-              Favorite Location
-            </CardTitle>
-            <MapPin className='h-4 w-4' />
+            <CardTitle className='text-sm font-medium'>Avg Fish Size</CardTitle>
+            <FishSymbol className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
-              {stats.favoriteLocation || 'No data'}
+              {stats.avgLength.toFixed(1)} cm
             </div>
+            <p className='text-xs text-muted-foreground'>
+              Avg weight: {stats.avgWeight.toFixed(1)} g
+            </p>
+          </CardContent>
+        </Card>
+        <Card className='border border-border'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>Most Used Fly</CardTitle>
+            <FishSymbol className='h-4 w-4 text-muted-foreground' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-2xl font-bold'>{stats.mostUsedFly}</div>
+            <p className='text-xs text-muted-foreground'>
+              Most common fish: {stats.mostCommonFish}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className='border border-border'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>
+              Best Fishing Time
+            </CardTitle>
+            <Clock className='h-4 w-4 text-muted-foreground' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-2xl font-bold'>{stats.bestFishingTime}</div>
+            <p className='text-xs text-muted-foreground'>
+              Best weather: {stats.bestWeather}
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mb-8'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-8'>
         <Card className='bg-card border border-border'>
           <CardHeader>
             <CardTitle className='text-md font-normal tracking-tight'>
@@ -346,6 +363,43 @@ export function FishingStatistics({ userId }: { userId: string }) {
           </CardContent>
         </Card>
       </div>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+        <Card className='bg-card border border-border'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-normal tracking-tight'>
+              Total Trips
+            </CardTitle>
+            <Calendar className='h-4 w-4' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-2xl font-bold'>{stats.totalTrips}</div>
+          </CardContent>
+        </Card>
+        <Card className='bg-card border border-border'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-normal tracking-tight'>
+              Total Catches
+            </CardTitle>
+            <FishSymbol className='h-4 w-4' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-2xl font-bold'>{stats.totalCatches}</div>
+          </CardContent>
+        </Card>
+        <Card className='bg-card border border-border'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-normal tracking-tight'>
+              Favorite Location
+            </CardTitle>
+            <MapPin className='h-4 w-4' />
+          </CardHeader>
+          <CardContent>
+            <div className='text-2xl font-bold'>
+              {stats.favoriteLocation || 'No data'}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card className='bg-card border border-border'>
         <CardHeader>
@@ -399,61 +453,6 @@ export function FishingStatistics({ userId }: { userId: string }) {
           </ChartContainer>
         </CardContent>
       </Card>
-
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-8'>
-        <Card className='border border-border'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Avg Fish Size</CardTitle>
-            <FishSymbol className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {stats.avgLength.toFixed(1)} cm
-            </div>
-            <p className='text-xs text-muted-foreground'>
-              Avg weight: {stats.avgWeight.toFixed(1)} g
-            </p>
-          </CardContent>
-        </Card>
-        <Card className='border border-border'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Most Used Fly</CardTitle>
-            <FishSymbol className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{stats.mostUsedFly}</div>
-            <p className='text-xs text-muted-foreground'>
-              Most common fish: {stats.mostCommonFish}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className='border border-border'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Best Fishing Time
-            </CardTitle>
-            <Clock className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{stats.bestFishingTime}</div>
-            <p className='text-xs text-muted-foreground'>
-              Best weather: {stats.bestWeather}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className='border border-border'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Largest Fish</CardTitle>
-            <Scale className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{stats.largestFish.type}</div>
-            <p className='text-xs text-muted-foreground'>
-              {stats.largestFish.length} cm, {stats.largestFish.weight} g
-            </p>
-          </CardContent>
-        </Card>
-      </div>
     </>
   );
 }
