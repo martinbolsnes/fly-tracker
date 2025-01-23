@@ -188,16 +188,16 @@ export default function TripPage() {
                                 </PopoverTrigger>
                                 <PopoverContent className='border border-border'>
                                   <p>
-                                    The Fulton&apos;s K = (W / L^3) * 100, where
-                                    W is the weight of the fish in grams and L
-                                    is the length of the fish in cm. The
                                     Fulton&apos;s K factor is a measure of the
-                                    condition of the fish. A healthy fish will
-                                    have a K factor between 1 and 1.1.
+                                    condition of the fish. The Fulton&apos;s K =
+                                    (W / L^3) * 100, where W is the weight of
+                                    the fish in grams and L is the length of the
+                                    fish in cm. A healthy fish will have a K
+                                    factor between 1 and 1.1.
                                   </p>
                                 </PopoverContent>
                               </Popover>
-                              Fulton&apos;s Factor:{' '}
+                              K Factor:{' '}
                               {calculateFultonFactor(
                                 fishCatch.length,
                                 fishCatch.weight
