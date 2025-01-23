@@ -35,9 +35,16 @@ export function useImageUpload() {
         data: { publicUrl },
       } = client.storage.from(BUCKET_NAME).getPublicUrl(data.path);
 
+      const { error: updateError } = await client
+        .from('fishing_trips')
+        .update({ image_url: publicUrl })
+        .eq('id', tripId);
+
+      if (updateError) throw updateError;
+
       toast({
         title: 'Success! 🎉',
-        description: 'Image uploaded successfully',
+        description: 'Image uploaded and trip updated successfully',
         variant: 'default',
       });
 
