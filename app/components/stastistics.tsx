@@ -53,6 +53,7 @@ export function FishingStatistics({ userId }: { userId: string }) {
     totalCatches: number;
     totalTrips: number;
     favoriteLocation: string;
+    uniqueLocations: number;
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
@@ -134,6 +135,10 @@ export function FishingStatistics({ userId }: { userId: string }) {
             (a, b) => (b[1] as number) - (a[1] as number)
           )[0]?.[0] || 'N/A';
 
+        const uniqueLocations = new Set(
+          tripsWithCatches.map((trip) => trip.location)
+        ).size;
+
         const locationCounts = tripsWithCatches.reduce((acc, trip) => {
           acc[trip.location] = (acc[trip.location] || 0) + 1;
           return acc;
@@ -170,6 +175,7 @@ export function FishingStatistics({ userId }: { userId: string }) {
           totalCatches: allCatches.length,
           totalTrips: tripsWithCatches.length,
           favoriteLocation,
+          uniqueLocations,
         });
       } catch (error) {
         console.error('Error fetching fishing stats:', error);
@@ -389,14 +395,12 @@ export function FishingStatistics({ userId }: { userId: string }) {
         <Card className='bg-card border border-border'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-normal tracking-tight'>
-              Favorite Location
+              Unique Locations
             </CardTitle>
             <MapPin className='h-4 w-4' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>
-              {stats.favoriteLocation || 'No data'}
-            </div>
+            <div className='text-2xl font-bold'>{stats.uniqueLocations}</div>
           </CardContent>
         </Card>
       </div>
