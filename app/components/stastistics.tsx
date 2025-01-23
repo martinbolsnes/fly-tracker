@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FishSymbol, Clock, Scale, Calendar, MapPin } from 'lucide-react';
-import { LoadingSpinner } from './LoadingSpinner';
+import { LoadingSpinner } from './loadingSpinner';
 import {
   ChartContainer,
   ChartTooltip,
@@ -183,7 +183,7 @@ export function FishingStatistics({ userId }: { userId: string }) {
 
   if (loading) {
     return (
-      <div>
+      <div className='flex justify-center items-center'>
         <LoadingSpinner fill='fill-primary' />
       </div>
     );
