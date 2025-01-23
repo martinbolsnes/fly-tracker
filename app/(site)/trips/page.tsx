@@ -31,9 +31,7 @@ export default function TripsPage() {
     trips,
     loading,
     error,
-    sortBy,
     setSortBy,
-    sortOrder,
     setSortOrder,
     filterLocation,
     setFilterLocation,
@@ -41,7 +39,7 @@ export default function TripsPage() {
     fetchTrips,
   } = useTripManagement();
 
-  const { uploadImage, uploading } = useImageUpload();
+  const { uploadImage } = useImageUpload();
   const [editingTrip, setEditingTrip] = useState<FishingTrip | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -170,7 +168,7 @@ export default function TripsPage() {
           </DialogHeader>
           <EditTripForm
             trip={editingTrip}
-            onSave={async (updatedTrip) => {
+            onSave={async () => {
               await fetchTrips();
               setIsEditDialogOpen(false);
             }}
