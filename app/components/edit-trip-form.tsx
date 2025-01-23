@@ -44,6 +44,8 @@ const formSchema = z.object({
   weather: z.string(),
   notes: z.string().nullable(),
   catch_count: z.number(),
+  water_temperature: z.number().nullable().optional(),
+  air_temperature: z.number().nullable().optional(),
   fish_catches: z.array(fishCatchSchema),
 });
 
@@ -65,6 +67,8 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
       weather: trip?.weather || '',
       notes: trip?.notes || '',
       catch_count: trip?.catch_count || 0,
+      water_temperature: trip?.water_temperature || null,
+      air_temperature: trip?.air_temperature || null,
       fish_catches: trip?.fish_catches || [],
     },
   });
@@ -83,6 +87,8 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
         weather: trip.weather,
         notes: trip.notes,
         catch_count: trip.catch_count,
+        water_temperature: trip.water_temperature,
+        air_temperature: trip.air_temperature,
         fish_catches: trip?.fish_catches,
       });
     }
@@ -102,6 +108,8 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
           weather: values.weather,
           notes: values.notes,
           catch_count: values.fish_catches.length,
+          water_temperature: values.water_temperature,
+          air_temperature: values.air_temperature,
         })
         .eq('id', trip.id)
         .select();
@@ -249,6 +257,54 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                     <SelectItem value='Rainy'>Rainy</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='flex items-center space-x-4'>
+          <FormField
+            control={form.control}
+            name='water_temperature'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Water Temperature (°C)</FormLabel>
+                <FormControl>
+                  <Input
+                    className='text-base'
+                    type='number'
+                    {...field}
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? parseFloat(e.target.value) : ''
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='air_temperature'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Air Temperature (°C)</FormLabel>
+                <FormControl>
+                  <Input
+                    className='text-base'
+                    type='number'
+                    {...field}
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? parseFloat(e.target.value) : ''
+                      )
+                    }
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
