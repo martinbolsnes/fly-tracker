@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,8 @@ import { useTripManagement } from '../../../components/hooks/use-trip-management
 import { TripCard } from '@/app/components/trip-card';
 import { EditTripForm } from '@/app/components/edit-trip-form';
 import { FishingTrip } from '../../types';
+import { createClient } from '@/lib/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 export default function TripsPage() {
   const {
@@ -38,6 +40,21 @@ export default function TripsPage() {
     deleteTrip,
     fetchTrips,
   } = useTripManagement();
+
+  const client = createClient();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await client.auth.getUser();
+      if (user) {
+        setUser(user);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const { uploadImage } = useImageUpload();
   const [editingTrip, setEditingTrip] = useState<FishingTrip | null>(null);
@@ -69,11 +86,15 @@ export default function TripsPage() {
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      const publicUrl: string | null = await uploadImage(file, tripId, tripId);
-      if (publicUrl) {
-        await fetchTrips();
+      if (user?.id) {
+        const publicUrl = await uploadImage(file, user.id, tripId);
+        if (publicUrl) {
+          await fetchTrips();
+        }
+        e.target.value = '';
+      } else {
+        throw new Error('User not found');
       }
-      e.target.value = '';
     }
   };
 
