@@ -183,7 +183,7 @@ export default function TripsPage() {
       )}
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className='bg-card border border-border rounded-lg overflow-y-scroll max-h-screen'>
+        <DialogContent className='bg-card border border-border rounded-lg overflow-y-scroll'>
           <DialogHeader>
             <DialogTitle>Edit Fishing Trip</DialogTitle>
           </DialogHeader>
