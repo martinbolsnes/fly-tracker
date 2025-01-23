@@ -17,6 +17,12 @@ import {
   Upload,
   Edit,
   Trash2,
+  ThermometerSun,
+  Droplet,
+  ThermometerSnowflake,
+  Sun,
+  CloudRain,
+  Cloud,
 } from 'lucide-react';
 import { GiFishingPole } from 'react-icons/gi';
 import { FishingTrip } from '../types';
@@ -66,51 +72,80 @@ export function TripCard({
       <CardContent className='flex-grow'>
         <div className='grid grid-cols-2 gap-2 text-sm'>
           <div className='flex items-center'>
-            <CloudSunRain className='h-4 w-4 mr-2 text-primary' />
+            {trip.weather === 'Sunny' ? (
+              <Sun className='h-4 w-4 mr-2 text-primary' />
+            ) : trip.weather === 'Rainy' ? (
+              <CloudRain className='h-4 w-4 mr-2 text-primary' />
+            ) : trip.weather === 'Cloudy' ? (
+              <Cloud className='h-4 w-4 mr-2 text-primary' />
+            ) : (
+              <CloudSunRain className='h-4 w-4 mr-2 text-primary' />
+            )}
             {trip.weather}
           </div>
           <div className='flex items-center'>
             <Clock className='h-4 w-4 mr-2 text-primary' />
             {trip.time_of_day}
           </div>
-          <div className='flex mt-2'>
+          {trip.water_temperature && (
+            <div className='flex items-center'>
+              <Droplet className='h-4 w-4 mr-2 text-primary' />
+              {trip.water_temperature}°C
+            </div>
+          )}
+          {trip.air_temperature && (
+            <div className='flex items-center'>
+              {trip.air_temperature < 10 ? (
+                <ThermometerSnowflake className='h-4 w-4 mr-2 text-primary' />
+              ) : (
+                <ThermometerSun className='h-4 w-4 mr-2 text-primary' />
+              )}
+              {trip.air_temperature}°C
+            </div>
+          )}
+
+          <div className='flex items-center'>
             <FishSymbol className='h-4 w-4 mr-2 text-primary' />
             {trip.catch_count}
             {trip.catch_count === 1 ? ' fish' : ' fishes'} caught
           </div>
-          {/* {trip.fish_catches.length > 0 && (
-            <div className='mt-2'>
-              {trip.fish_catches.map(
-                (fishCatch, index) =>
-                  fishCatch.fish_type &&
-                  fishCatch.caught_on && (
-                    <li key={index} className='text-foreground/80'>
-                      {`${fishCatch.fish_type} (${fishCatch.caught_on})`}
-                    </li>
-                  )
-              )}
-            </div>
-          )} */}
         </div>
         {trip.notes && (
           <p className='mt-2 text-sm text-muted-foreground'>{trip.notes}</p>
         )}
       </CardContent>
       <CardFooter className='flex justify-between'>
-        <label className='cursor-pointer'>
-          <Input
-            type='file'
-            className='hidden'
-            onChange={(e) => onImageUpload(e, trip.id)}
-            accept='image/*'
-          />
-          <Button variant='outline' size='sm' asChild>
-            <span>
-              <Upload className='h-4 w-4 mr-2' />
-              Upload image
-            </span>
-          </Button>
-        </label>
+        {trip.image_url ? (
+          <label className='cursor-pointer'>
+            <Input
+              type='file'
+              className='hidden'
+              onChange={(e) => onImageUpload(e, trip.id)}
+              accept='image/*'
+            />
+            <Button variant='outline' size='sm' asChild>
+              <span>
+                <Upload className='h-4 w-4 mr-2' />
+                Change image
+              </span>
+            </Button>
+          </label>
+        ) : (
+          <label className='cursor-pointer'>
+            <Input
+              type='file'
+              className='hidden'
+              onChange={(e) => onImageUpload(e, trip.id)}
+              accept='image/*'
+            />
+            <Button variant='outline' size='sm' asChild>
+              <span>
+                <Upload className='h-4 w-4 mr-2' />
+                Upload image
+              </span>
+            </Button>
+          </label>
+        )}
         <div className='flex items-center space-x-2'>
           <Button variant='secondary' size='sm' onClick={() => onEdit(trip)}>
             <Edit className='h-4 w-4 mr-2' />
