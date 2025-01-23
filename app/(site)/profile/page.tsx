@@ -15,7 +15,7 @@ import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { LoadingSpinner } from '@/app/components/loadingSpinner';
+import { LoadingSpinner } from '../../components/loadingSpinner';
 
 import { toast } from '@/components/hooks/use-toast';
 import { Input } from '@/components/ui/input';

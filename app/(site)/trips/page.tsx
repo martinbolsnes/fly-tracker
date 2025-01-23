@@ -19,7 +19,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { LoadingSpinner } from '@/app/components/loadingSpinner';
+import { LoadingSpinner } from '../../components/loadingSpinner';
 import { useImageUpload } from '../../../components/hooks/use-image-upload';
 import { useTripManagement } from '../../../components/hooks/use-trip-management';
 import { TripCard } from '@/app/components/trip-card';

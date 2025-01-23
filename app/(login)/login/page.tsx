@@ -1,7 +1,7 @@
 'use client';
 
 /* import LoginButtonGithub from '@/app/components/Login/LoginGithub'; */
-import LoginButtonGoogle from '@/app/components/login/loginGoogle';
+import LoginButtonGoogle from '../../components/login/loginGoogle';
 import { cn } from '@/lib/utils';
 
 export default function LoginPage() {

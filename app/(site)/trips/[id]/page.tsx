@@ -14,7 +14,7 @@ import {
   Info,
 } from 'lucide-react';
 import Image from 'next/image';
-import { LoadingSpinner } from '@/app/components/loadingSpinner';
+import { LoadingSpinner } from '../../../components/loadingSpinner';
 import { GiFishingPole } from 'react-icons/gi';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
