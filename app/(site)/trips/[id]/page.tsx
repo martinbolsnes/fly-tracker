@@ -13,7 +13,6 @@ import {
   Info,
   Sun,
   CloudRain,
-  Cloud,
   Droplet,
   ThermometerSun,
   ThermometerSnowflake,

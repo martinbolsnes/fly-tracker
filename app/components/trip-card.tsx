@@ -22,7 +22,6 @@ import {
   ThermometerSnowflake,
   Sun,
   CloudRain,
-  Cloud,
   CloudSun,
   Cloudy,
   MoonStar,
