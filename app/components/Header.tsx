@@ -12,8 +12,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import Avatar from './Avatar';
-import LogoutButton from './Logout/Logout';
+import Avatar from './avatar';
+import LogoutButton from './logout/Logout';
 import ThemeToggle from './themeToggle';
 
 export const Header = async () => {
