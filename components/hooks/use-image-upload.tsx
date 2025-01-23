@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from '@/components/hooks/use-toast';
-import { LoadingSpinner } from '@/app/components/loadingSpinner';
+import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 
 const BUCKET_NAME = 'trip-images';
 

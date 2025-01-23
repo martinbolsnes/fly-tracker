@@ -19,7 +19,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { LoadingSpinner } from '@/app/components/loadingSpinner';
+import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 import { useImageUpload } from '../../../components/hooks/use-image-upload';
 import { useTripManagement } from '../../../components/hooks/use-trip-management';
 import { TripCard } from '@/app/components/trip-card';
@@ -71,7 +71,7 @@ export default function TripsPage() {
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      const publicUrl = await uploadImage(file, tripId, tripId);
+      const publicUrl: string | null = await uploadImage(file, tripId, tripId);
       if (publicUrl) {
         await fetchTrips();
       }

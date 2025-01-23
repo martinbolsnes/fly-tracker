@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '../../../lib/supabase/client';
-import { LoadingSpinner } from '../loadingSpinner';
+import { LoadingSpinner } from '../LoadingSpinner';
 import { toast } from '@/components/hooks/use-toast';
 
 export default function LoginButtonGoogle(props: { nextUrl?: string }) {

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FishSymbol, Clock, Scale, Calendar, MapPin } from 'lucide-react';
-import { LoadingSpinner } from './loadingSpinner';
+import { LoadingSpinner } from './LoadingSpinner';
 import {
   ChartContainer,
   ChartTooltip,

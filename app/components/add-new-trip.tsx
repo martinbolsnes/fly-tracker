@@ -15,7 +15,7 @@ import {
 import { toast } from '@/components/hooks/use-toast';
 import { createClient } from '@/lib/supabase/client';
 import { PlusCircle, X } from 'lucide-react';
-import { LoadingSpinner } from './loadingSpinner';
+import { LoadingSpinner } from './LoadingSpinner';
 
 type FishCatch = {
   fish_type: string;
