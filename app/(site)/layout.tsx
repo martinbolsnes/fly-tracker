@@ -3,9 +3,9 @@ import { Quicksand } from 'next/font/google';
 import '../globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { Header } from '../components/header';
+import { Header } from '../components/Header';
 import { ThemeProvider } from '../components/theme-provider';
-import Footer from '../components/footer';
+import Footer from '../components/Footer';
 
 const quicksand = Quicksand({ subsets: ['latin'] });
 
