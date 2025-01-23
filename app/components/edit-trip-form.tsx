@@ -253,8 +253,13 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                   </FormControl>
                   <SelectContent className='text-base border border-border'>
                     <SelectItem value='Sunny'>Sunny</SelectItem>
-                    <SelectItem value='Cloudy'>Cloudy</SelectItem>
                     <SelectItem value='Rainy'>Rainy</SelectItem>
+                    <SelectItem value='Partly Cloudy'>Partly Cloudy</SelectItem>
+                    <SelectItem value='Overcast'>Overcast</SelectItem>
+                    <SelectItem value='Clear'>Clear sky</SelectItem>
+                    <SelectItem value='Snowy'>Snowy</SelectItem>
+                    <SelectItem value='Drizzly'>Drizzly</SelectItem>
+                    <SelectItem value='Foggy'>Foggy</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

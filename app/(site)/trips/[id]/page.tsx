@@ -17,6 +17,12 @@ import {
   Droplet,
   ThermometerSun,
   ThermometerSnowflake,
+  MoonStar,
+  Cloudy,
+  CloudSnow,
+  CloudDrizzle,
+  CloudFog,
+  CloudSun,
 } from 'lucide-react';
 import Image from 'next/image';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
@@ -144,7 +150,17 @@ export default function TripPage() {
                 ) : trip.weather === 'Rainy' ? (
                   <CloudRain className='h-4 w-4 mr-2 text-primary' />
                 ) : trip.weather === 'Cloudy' ? (
-                  <Cloud className='h-4 w-4 mr-2 text-primary' />
+                  <CloudSun className='h-4 w-4 mr-2 text-primary' />
+                ) : trip.weather === 'Overcast' ? (
+                  <Cloudy className='h-4 w-4 mr-2 text-primary' />
+                ) : trip.weather === 'Clear' ? (
+                  <MoonStar className='h-4 w-4 mr-2 text-primary' />
+                ) : trip.weather === 'Snowy' ? (
+                  <CloudSnow className='h-4 w-4 mr-2 text-primary' />
+                ) : trip.weather === 'Drizzly' ? (
+                  <CloudDrizzle className='h-4 w-4 mr-2 text-primary' />
+                ) : trip.weather === 'Foggy' ? (
+                  <CloudFog className='h-4 w-4 mr-2 text-primary' />
                 ) : (
                   <CloudSunRain className='h-4 w-4 mr-2 text-primary' />
                 )}
