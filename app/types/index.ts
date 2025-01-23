@@ -1,3 +1,11 @@
+export type Profile = {
+  id: string;
+  full_name: string;
+  username?: string | null;
+  avatar_url?: string | null;
+  short_bio?: string | null;
+};
+
 export type FishCatch = {
   id: string;
   fish_type: string;
