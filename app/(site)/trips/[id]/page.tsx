@@ -10,8 +10,13 @@ import {
   Calendar,
   CloudSunRain,
   Clock,
-  FishSymbol,
   Info,
+  Sun,
+  CloudRain,
+  Cloud,
+  Droplet,
+  ThermometerSun,
+  ThermometerSnowflake,
 } from 'lucide-react';
 import Image from 'next/image';
 import { LoadingSpinner } from '../../../components/LoadingSpinner';
@@ -131,22 +136,41 @@ export default function TripPage() {
         </div>
         <CardContent className='space-y-6'>
           <div className='grid sm:grid-cols-4 grid-cols-1 gap-4 mt-4'>
-            <div className='sm:col-span-2 grid-cols-1 space-y-4'>
+            <div className='sm:col-span-2 space-y-4'>
               <h3 className='text-lg font-semibold mb-2'>Trip Info</h3>
               <div className='flex items-center space-x-2'>
-                <CloudSunRain className='h-5 w-5 text-muted-foreground' />
-                <span>{trip.weather}</span>
+                {trip.weather === 'Sunny' ? (
+                  <Sun className='h-4 w-4 mr-2 text-primary' />
+                ) : trip.weather === 'Rainy' ? (
+                  <CloudRain className='h-4 w-4 mr-2 text-primary' />
+                ) : trip.weather === 'Cloudy' ? (
+                  <Cloud className='h-4 w-4 mr-2 text-primary' />
+                ) : (
+                  <CloudSunRain className='h-4 w-4 mr-2 text-primary' />
+                )}
+                {trip.weather}
               </div>
               <div className='flex items-center space-x-2'>
-                <Clock className='h-5 w-5 text-muted-foreground' />
+                <Clock className='h-5 w-5 text-primary' />
                 <span>{trip.time_of_day}</span>
               </div>
               <div className='flex items-center space-x-2'>
-                <FishSymbol className='h-5 w-5 text-muted-foreground' />
-                <span>
-                  {trip.catch_count}{' '}
-                  {trip.catch_count === 1 ? 'fish' : 'fishes'} caught
-                </span>
+                {trip.water_temperature && (
+                  <div className='flex items-center'>
+                    <Droplet className='h-4 w-4 mr-2 text-primary' />
+                    {trip.water_temperature}°C
+                  </div>
+                )}
+                {trip.air_temperature && (
+                  <div className='flex items-center'>
+                    {trip.air_temperature < 10 ? (
+                      <ThermometerSnowflake className='h-4 w-4 mr-2 text-primary' />
+                    ) : (
+                      <ThermometerSun className='h-4 w-4 mr-2 text-primary' />
+                    )}
+                    {trip.air_temperature}°C
+                  </div>
+                )}
               </div>
               {trip.notes && (
                 <div>
