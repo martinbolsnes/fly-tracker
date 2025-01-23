@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from '@/components/hooks/use-toast';
 import { FishingTrip } from '../types';
+import { LoadingSpinner } from './LoadingSpinner';
 
 const fishCatchSchema = z.object({
   id: z.string().optional(),
@@ -42,6 +43,7 @@ const formSchema = z.object({
   time_of_day: z.string(),
   weather: z.string(),
   notes: z.string().nullable(),
+  catch_count: z.number(),
   fish_catches: z.array(fishCatchSchema),
 });
 
@@ -97,6 +99,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
           time_of_day: values.time_of_day,
           weather: values.weather,
           notes: values.notes,
+          catch_count: values.fish_catches.length,
         })
         .eq('id', trip.id)
         .select();
@@ -172,7 +175,11 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
               <FormItem>
                 <FormLabel>Location</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter fishing location' {...field} />
+                  <Input
+                    className='text-base'
+                    placeholder='Enter fishing location'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -185,7 +192,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
               <FormItem>
                 <FormLabel>Date</FormLabel>
                 <FormControl>
-                  <Input type='date' {...field} />
+                  <Input className='text-base' type='date' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -208,7 +215,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                       <SelectValue placeholder='Select time of day' />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className='text-base border border-border'>
                     <SelectItem value='Morning'>Morning</SelectItem>
                     <SelectItem value='Afternoon'>Afternoon</SelectItem>
                     <SelectItem value='Evening'>Evening</SelectItem>
@@ -234,7 +241,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                       <SelectValue placeholder='Select weather condition' />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className='text-base border border-border'>
                     <SelectItem value='Sunny'>Sunny</SelectItem>
                     <SelectItem value='Cloudy'>Cloudy</SelectItem>
                     <SelectItem value='Rainy'>Rainy</SelectItem>
@@ -254,7 +261,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
               <FormControl>
                 <Textarea
                   placeholder='Enter any additional notes about the trip'
-                  className='resize-none'
+                  className='resize-none text-base'
                   {...field}
                   value={field.value ?? ''}
                 />
@@ -277,7 +284,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                   <FormItem>
                     <FormLabel>Fish Type</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input className='text-base' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -290,7 +297,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                   <FormItem>
                     <FormLabel>Caught On</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input className='text-base' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -304,6 +311,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                     <FormLabel>Length (cm)</FormLabel>
                     <FormControl>
                       <Input
+                        className='text-base'
                         type='number'
                         {...field}
                         onChange={(e) =>
@@ -325,6 +333,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                     <FormLabel>Weight (g)</FormLabel>
                     <FormControl>
                       <Input
+                        className='text-base'
                         type='number'
                         {...field}
                         onChange={(e) =>
@@ -363,7 +372,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
           </Button>
         </div>
         <Button type='submit' disabled={loading}>
-          {loading ? 'Updating...' : 'Update Trip'}
+          {loading ? <LoadingSpinner fill='fill-primary' /> : 'Update Trip'}
         </Button>
       </form>
     </Form>
