@@ -24,5 +24,7 @@ export type FishingTrip = {
   notes: string | null;
   image_url: string | null;
   catch_count: number;
+  water_temperature?: number | null;
+  air_temperature?: number | null;
   fish_catches: FishCatch[];
 };
