@@ -20,32 +20,7 @@ import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { toast } from '@/components/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { FishingStatistics } from '@/app/components/stastistics';
-
-type Profile = {
-  id: string;
-  full_name: string;
-  username?: string | null;
-  avatar_url?: string | null;
-  short_bio?: string | null;
-};
-
-type FishCatch = {
-  fish_type: string;
-  caught_on: string;
-};
-
-type FishingTrip = {
-  id: string;
-  user_id: string;
-  date: string;
-  time_of_day: string;
-  location: string;
-  weather: string;
-  notes: string | null;
-  image_url: string | null;
-  catch_count: number;
-  fish_catches: FishCatch[];
-};
+import { FishingTrip, Profile } from '@/app/types';
 
 export default function ProfilePage() {
   const [trips, setTrips] = useState<FishingTrip[]>([]);
