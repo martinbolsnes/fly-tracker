@@ -15,7 +15,7 @@ import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { LoadingSpinner } from '@/app/components/LoadingSpinner';
+import { LoadingSpinner } from '@/app/components/loadingSpinner';
 
 import { toast } from '@/components/hooks/use-toast';
 import { Input } from '@/components/ui/input';
@@ -391,14 +391,17 @@ export default function ProfilePage() {
         </div>
         <div className='flex flex-col items-end space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0'>
           <Link href='/trips'>
-            <Button variant='outline'>View All Trips</Button>
+            <Button variant='outline' size='sm'>
+              View All Trips
+            </Button>
           </Link>
           <Link href='/logbook'>
-            <Button>New Trip</Button>
+            <Button variant='default' size='sm'>
+              Log New Trip
+            </Button>
           </Link>
         </div>
       </div>
-
       <FishingStatistics userId={user.id} />
     </main>
   );
