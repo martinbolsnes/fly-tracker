@@ -25,27 +25,7 @@ import {
 } from '@/components/ui/popover';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Separator } from '@/components/ui/separator';
-
-type FishCatch = {
-  id: string;
-  fish_type: string;
-  caught_on: string;
-  length: number;
-  weight: number;
-};
-
-type FishingTrip = {
-  id: string;
-  user_id: string;
-  date: string;
-  time_of_day: string;
-  location: string;
-  weather: string;
-  notes: string | null;
-  image_url: string | null;
-  catch_count: number;
-  fish_catches: FishCatch[];
-};
+import { FishingTrip } from '@/app/types';
 
 const calculateFultonFactor = (length: number, weight: number): number => {
   return (weight / Math.pow(length, 3)) * 100;
