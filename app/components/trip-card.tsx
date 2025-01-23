@@ -78,7 +78,7 @@ export function TripCard({
             {trip.catch_count}
             {trip.catch_count === 1 ? ' fish' : ' fishes'} caught
           </div>
-          {trip.fish_catches.length > 0 && (
+          {/* {trip.fish_catches.length > 0 && (
             <div className='mt-2'>
               {trip.fish_catches.map(
                 (fishCatch, index) =>
@@ -90,7 +90,7 @@ export function TripCard({
                   )
               )}
             </div>
-          )}
+          )} */}
         </div>
         {trip.notes && (
           <p className='mt-2 text-sm text-muted-foreground'>{trip.notes}</p>
