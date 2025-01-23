@@ -273,7 +273,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
           )}
         />
         <div>
-          <h3 className='text-lg font-semibold mb-2'>Fish Catches</h3>
+          <h3 className='text-lg font-semibold mb-2'>Catches</h3>
           {fields.map((field, index) => (
             <div
               key={field.id}
@@ -353,7 +353,8 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
               />
               <Button
                 type='button'
-                variant='destructive'
+                variant='secondary'
+                className='bg-destructive/60'
                 onClick={() => remove(index)}
               >
                 Remove Fish Catch
@@ -362,6 +363,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
           ))}
           <Button
             type='button'
+            className='mt-2'
             variant='outline'
             onClick={() =>
               append({
