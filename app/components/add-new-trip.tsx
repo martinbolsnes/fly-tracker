@@ -365,6 +365,7 @@ export default function AddNewTrip() {
                       <FormLabel>Length (cm)</FormLabel>
                       <FormControl>
                         <Input
+                          className='text-base'
                           type='number'
                           placeholder='Enter fish length'
                           {...field}
@@ -388,6 +389,7 @@ export default function AddNewTrip() {
                       <FormLabel>Weight (g)</FormLabel>
                       <FormControl>
                         <Input
+                          className='text-base'
                           type='number'
                           placeholder='Enter fish weight'
                           {...field}
