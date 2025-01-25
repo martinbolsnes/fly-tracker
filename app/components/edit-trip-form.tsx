@@ -26,6 +26,7 @@ import {
 import { toast } from '@/components/hooks/use-toast';
 import { FishingTrip } from '../types';
 import { LoadingSpinner } from './LoadingSpinner';
+import { PlusCircle } from 'lucide-react';
 
 const fishCatchSchema = z.object({
   id: z.string().optional(),
@@ -418,7 +419,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                 className='bg-destructive/60'
                 onClick={() => remove(index)}
               >
-                Remove Fish Catch
+                Remove Catch
               </Button>
             </div>
           ))}
@@ -435,7 +436,8 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
               })
             }
           >
-            Add Fish Catch
+            <PlusCircle className='mr-2 h-4 w-4' />
+            Add Catch
           </Button>
         </div>
         <Button type='submit' disabled={loading}>
