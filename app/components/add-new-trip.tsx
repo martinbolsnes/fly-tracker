@@ -248,56 +248,56 @@ export default function AddNewTrip() {
               )}
             />
           </div>
-          <div className='flex items-center space-x-4'>
-            <FormField
-              control={form.control}
-              name='water_temperature'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Water Temperature (°C)</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='text-base'
-                      type='number'
-                      placeholder='Enter water temperature'
-                      {...field}
-                      value={field.value !== null ? field.value : ''}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? parseFloat(e.target.value) : null
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='air_temperature'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Air Temperature (°C)</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='text-base'
-                      type='number'
-                      placeholder='Enter air temperature'
-                      {...field}
-                      value={field.value !== null ? field.value : ''}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? parseFloat(e.target.value) : null
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+
+          <FormField
+            control={form.control}
+            name='water_temperature'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Water Temperature (°C)</FormLabel>
+                <FormControl>
+                  <Input
+                    className='text-base'
+                    type='number'
+                    placeholder='Enter water temperature'
+                    {...field}
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? parseFloat(e.target.value) : null
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='air_temperature'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Air Temperature (°C)</FormLabel>
+                <FormControl>
+                  <Input
+                    className='text-base'
+                    type='number'
+                    placeholder='Enter air temperature'
+                    {...field}
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? parseFloat(e.target.value) : null
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name='notes'
