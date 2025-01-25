@@ -84,7 +84,6 @@ const useAddNewTrip = () => {
     setLoading(true);
 
     try {
-      // First, insert the fishing trip
       const tripData = {
         user_id: userId,
         date: data.date,
@@ -107,7 +106,6 @@ const useAddNewTrip = () => {
 
       const tripId = insertedTripData[0].id;
 
-      // Then, insert the fish catches if there are any
       if (data.fish_catches.length > 0) {
         const catchesData = data.fish_catches.map((fishCatch) => ({
           trip_id: tripId,
@@ -146,275 +144,299 @@ export default function AddNewTrip() {
   const { form, fields, append, remove, onSubmit, loading } = useAddNewTrip();
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='flex flex-col space-y-6'
-      >
-        <h2 className='text-2xl font-bold'>Log New Trip</h2>
-        <div className='flex items-center space-x-4'>
-          <FormField
-            control={form.control}
-            name='location'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Location</FormLabel>
-                <FormControl>
-                  <Input placeholder='Enter fishing location' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='date'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <Input type='date' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className='flex items-center space-x-4'>
-          <FormField
-            control={form.control}
-            name='time_of_day'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Time of Day</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+    <div className='w-full'>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex flex-col space-y-6'
+        >
+          <h2 className='text-2xl font-bold'>Log New Trip</h2>
+          <div className='flex items-center space-x-4'>
+            <FormField
+              control={form.control}
+              name='location'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Select time of day' />
-                    </SelectTrigger>
+                    <Input
+                      className='text-base'
+                      placeholder='Enter fishing location'
+                      {...field}
+                    />
                   </FormControl>
-                  <SelectContent className='text-base border border-border'>
-                    <SelectItem value='Morning'>Morning</SelectItem>
-                    <SelectItem value='Afternoon'>Afternoon</SelectItem>
-                    <SelectItem value='Evening'>Evening</SelectItem>
-                    <SelectItem value='Night'>Night</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='weather'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Weather</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='date'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Select weather condition' />
-                    </SelectTrigger>
+                    <Input
+                      className='text-base'
+                      placeholder='Enter date'
+                      type='date'
+                      {...field}
+                    />
                   </FormControl>
-                  <SelectContent className='text-base border border-border'>
-                    <SelectItem value='Sunny'>Sunny</SelectItem>
-                    <SelectItem value='Rainy'>Rainy</SelectItem>
-                    <SelectItem value='Partly Cloudy'>Partly Cloudy</SelectItem>
-                    <SelectItem value='Overcast'>Overcast</SelectItem>
-                    <SelectItem value='Clear'>Clear sky</SelectItem>
-                    <SelectItem value='Snowy'>Snowy</SelectItem>
-                    <SelectItem value='Drizzly'>Drizzly</SelectItem>
-                    <SelectItem value='Foggy'>Foggy</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className='flex items-center space-x-4'>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className='flex items-center space-x-4'>
+            <FormField
+              control={form.control}
+              name='time_of_day'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Time of Day</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select time of day' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className='text-base border border-border'>
+                      <SelectItem value='Morning'>Morning</SelectItem>
+                      <SelectItem value='Afternoon'>Afternoon</SelectItem>
+                      <SelectItem value='Evening'>Evening</SelectItem>
+                      <SelectItem value='Night'>Night</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='weather'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Weather</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select weather condition' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className='text-base border border-border'>
+                      <SelectItem value='Sunny'>Sunny</SelectItem>
+                      <SelectItem value='Rainy'>Rainy</SelectItem>
+                      <SelectItem value='Partly Cloudy'>
+                        Partly Cloudy
+                      </SelectItem>
+                      <SelectItem value='Overcast'>Overcast</SelectItem>
+                      <SelectItem value='Clear'>Clear sky</SelectItem>
+                      <SelectItem value='Snowy'>Snowy</SelectItem>
+                      <SelectItem value='Drizzly'>Drizzly</SelectItem>
+                      <SelectItem value='Foggy'>Foggy</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className='flex items-center space-x-4'>
+            <FormField
+              control={form.control}
+              name='water_temperature'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Water Temperature (°C)</FormLabel>
+                  <FormControl>
+                    <Input
+                      className='text-base'
+                      type='number'
+                      placeholder='Enter water temperature'
+                      {...field}
+                      value={field.value !== null ? field.value : ''}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? parseFloat(e.target.value) : null
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='air_temperature'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Air Temperature (°C)</FormLabel>
+                  <FormControl>
+                    <Input
+                      className='text-base'
+                      type='number'
+                      placeholder='Enter air temperature'
+                      {...field}
+                      value={field.value !== null ? field.value : ''}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? parseFloat(e.target.value) : null
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
-            name='water_temperature'
+            name='notes'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Water Temperature (°C)</FormLabel>
+                <FormLabel>Notes</FormLabel>
                 <FormControl>
-                  <Input
-                    type='number'
-                    placeholder='Enter water temperature'
+                  <Textarea
+                    className='text-base'
+                    placeholder='Enter any additional notes'
                     {...field}
                     value={field.value !== null ? field.value : ''}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? parseFloat(e.target.value) : null
-                      )
-                    }
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name='air_temperature'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Air Temperature (°C)</FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder='Enter air temperature'
-                    {...field}
-                    value={field.value !== null ? field.value : ''}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? parseFloat(e.target.value) : null
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <FormField
-          control={form.control}
-          name='notes'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Notes</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder='Enter any additional notes'
-                  {...field}
-                  value={field.value !== null ? field.value : ''}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className='space-y-4'>
-          <h3 className='text-lg font-semibold'>Catches</h3>
-          {fields.map((field, index) => (
-            <div
-              key={field.id}
-              className='grid gap-4 grid-cols-1 sm:grid-cols-2 p-4 border border-border rounded-md'
-            >
-              <FormField
-                control={form.control}
-                name={`fish_catches.${index}.fish_type`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fish Type</FormLabel>
-                    <FormControl>
-                      <Input placeholder='Enter fish type' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`fish_catches.${index}.caught_on`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fly Used</FormLabel>
-                    <FormControl>
-                      <Input placeholder='Enter fly used' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`fish_catches.${index}.length`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Length (cm)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        placeholder='Enter fish length'
-                        {...field}
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? parseFloat(e.target.value) : null
-                          )
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`fish_catches.${index}.weight`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Weight (g)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        placeholder='Enter fish weight'
-                        {...field}
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? parseFloat(e.target.value) : null
-                          )
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type='button'
-                variant='destructive'
-                size='sm'
-                onClick={() => remove(index)}
-                className='w-full sm:col-span-2'
+          <div className='space-y-4'>
+            <h3 className='text-lg font-semibold'>Catches</h3>
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className='grid gap-4 grid-cols-1 sm:grid-cols-2 p-4 border border-border rounded-md'
               >
-                <X className='mr-2 h-4 w-4' />
-                Remove Fish
-              </Button>
-            </div>
-          ))}
-          <Button
-            type='button'
-            variant='outline'
-            onClick={() =>
-              append({
-                fish_type: '',
-                caught_on: '',
-                length: undefined,
-                weight: undefined,
-              })
-            }
-            className='w-full'
-          >
-            <PlusCircle className='mr-2 h-4 w-4' />
-            Add Catch
+                <FormField
+                  control={form.control}
+                  name={`fish_catches.${index}.fish_type`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fish Type</FormLabel>
+                      <FormControl>
+                        <Input
+                          className='text-base'
+                          placeholder='Enter fish type'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`fish_catches.${index}.caught_on`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Caught on</FormLabel>
+                      <FormControl>
+                        <Input
+                          className='text-base'
+                          placeholder='Enter fly used'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`fish_catches.${index}.length`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Length (cm)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          placeholder='Enter fish length'
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value ? parseFloat(e.target.value) : null
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`fish_catches.${index}.weight`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Weight (g)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          placeholder='Enter fish weight'
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value ? parseFloat(e.target.value) : null
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type='button'
+                  variant='destructive'
+                  size='sm'
+                  onClick={() => remove(index)}
+                  className='w-full sm:col-span-2'
+                >
+                  <X className='mr-2 h-4 w-4' />
+                  Remove Fish
+                </Button>
+              </div>
+            ))}
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() =>
+                append({
+                  fish_type: '',
+                  caught_on: '',
+                  length: undefined,
+                  weight: undefined,
+                })
+              }
+              className='w-full'
+            >
+              <PlusCircle className='mr-2 h-4 w-4' />
+              Add Catch
+            </Button>
+          </div>
+          <Button type='submit' disabled={loading} className='w-full'>
+            {loading ? <LoadingSpinner fill='fill-primary' /> : 'Log Trip'}
           </Button>
-        </div>
-        <Button type='submit' disabled={loading} className='w-full'>
-          {loading ? <LoadingSpinner fill='fill-primary' /> : 'Log Trip'}
-        </Button>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </div>
   );
 }
