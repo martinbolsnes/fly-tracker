@@ -1,10 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm, useFieldArray } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { createClient } from '@/lib/supabase/client';
+import { PlusCircle, X } from 'lucide-react';
+import { LoadingSpinner } from './LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -13,57 +27,49 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from '@/components/hooks/use-toast';
-import { createClient } from '@/lib/supabase/client';
-import { PlusCircle, X } from 'lucide-react';
-import { LoadingSpinner } from './LoadingSpinner';
 
-type FishCatch = {
-  fish_type: string;
-  caught_on: string;
-  length?: number;
-  weight?: number;
-};
+const fishCatchSchema = z.object({
+  fish_type: z.string().min(1, 'Fish type is required'),
+  caught_on: z.string().optional(),
+  length: z.number().nullable().optional(),
+  weight: z.number().nullable().optional(),
+});
 
-type FishingTrip = {
-  id: string;
-  user_id: string;
-  date: string;
-  time_of_day: string;
-  location: string;
-  weather: string;
-  notes: string | null;
-  image_url: string | null;
-  catch_count: number;
-  water_temperature?: number | null;
-  air_temperature?: number | null;
-};
+const tripSchema = z.object({
+  date: z.string().min(1, 'Date is required'),
+  time_of_day: z.string().min(1, 'Time of day is required'),
+  location: z.string().min(1, 'Location is required'),
+  weather: z.string().min(1, 'Weather is required'),
+  notes: z.string().nullable(),
+  water_temperature: z.number().nullable(),
+  air_temperature: z.number().nullable(),
+  fish_catches: z.array(fishCatchSchema),
+});
 
-const initialFishCatch = {
-  fish_type: '',
-  caught_on: '',
-  length: 0,
-  weight: 0,
-};
-
-export default function AddNewTrip() {
+const useAddNewTrip = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [newTrip, setNewTrip] = useState<Omit<FishingTrip, 'id' | 'user_id'>>({
-    date: '',
-    time_of_day: '',
-    location: '',
-    weather: '',
-    notes: '',
-    image_url: null,
-    catch_count: 0,
-    water_temperature: null,
-    air_temperature: null,
-  });
-  const [fishCatches, setFishCatches] = useState<FishCatch[]>([
-    initialFishCatch,
-  ]);
   const supabase = createClient();
   const [userId, setUserId] = useState<string | null>(null);
+
+  const form = useForm<z.infer<typeof tripSchema>>({
+    resolver: zodResolver(tripSchema),
+    defaultValues: {
+      date: '',
+      time_of_day: '',
+      location: '',
+      weather: '',
+      notes: '',
+      water_temperature: null,
+      air_temperature: null,
+      fish_catches: [],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'fish_catches',
+  });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -74,21 +80,24 @@ export default function AddNewTrip() {
     fetchUser();
   }, [supabase]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setNewTrip({ ...newTrip, [name]: value });
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmit = async (data: z.infer<typeof tripSchema>) => {
     setLoading(true);
 
-    const tripData = {
-      ...newTrip,
-      user_id: userId,
-    };
-
     try {
+      // First, insert the fishing trip
+      const tripData = {
+        user_id: userId,
+        date: data.date,
+        time_of_day: data.time_of_day,
+        location: data.location,
+        weather: data.weather,
+        notes: data.notes,
+        image_url: null,
+        catch_count: data.fish_catches.length,
+        water_temperature: data.water_temperature,
+        air_temperature: data.air_temperature,
+      };
+
       const { data: insertedTripData, error: tripError } = await supabase
         .from('fishing_trips')
         .insert([tripData])
@@ -98,18 +107,11 @@ export default function AddNewTrip() {
 
       const tripId = insertedTripData[0].id;
 
-      const validFishCatches = fishCatches.filter(
-        (fishCatch) =>
-          fishCatch.fish_type.trim() !== '' && fishCatch.caught_on.trim() !== ''
-      );
-
-      if (validFishCatches.length > 0) {
-        const catchesData = validFishCatches.map((fishCatch) => ({
+      // Then, insert the fish catches if there are any
+      if (data.fish_catches.length > 0) {
+        const catchesData = data.fish_catches.map((fishCatch) => ({
           trip_id: tripId,
-          fish_type: fishCatch.fish_type,
-          caught_on: fishCatch.caught_on,
-          length: fishCatch.length || null,
-          weight: fishCatch.weight || null,
+          ...fishCatch,
         }));
 
         const { error: catchesError } = await supabase
@@ -117,13 +119,6 @@ export default function AddNewTrip() {
           .insert(catchesData);
 
         if (catchesError) throw catchesError;
-
-        const { error: updateError } = await supabase
-          .from('fishing_trips')
-          .update({ catch_count: validFishCatches.length })
-          .eq('id', tripId);
-
-        if (updateError) throw updateError;
       }
 
       toast({
@@ -144,251 +139,282 @@ export default function AddNewTrip() {
     }
   };
 
-  const addFishCatch = () => {
-    setFishCatches([...fishCatches, initialFishCatch]);
-  };
+  return { form, fields, append, remove, onSubmit, loading };
+};
 
-  const updateFishCatch = (
-    index: number,
-    field: keyof FishCatch,
-    value: number | string | null
-  ) => {
-    setFishCatches((prevFishCatches) => {
-      const updatedFishCatches = [...prevFishCatches];
-      updatedFishCatches[index] = {
-        ...updatedFishCatches[index],
-        [field]: value,
-      };
-      return updatedFishCatches;
-    });
-  };
-
-  const removeFishCatch = (index: number) => {
-    const updatedFishCatches = fishCatches.filter((_, i) => i !== index);
-    setFishCatches(updatedFishCatches);
-  };
+export default function AddNewTrip() {
+  const { form, fields, append, remove, onSubmit, loading } = useAddNewTrip();
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-4'>
-      <h2 className='text-2xl'>Add New Trip</h2>
-      <div className='grid grid-cols-1 gap-4 mb-2'>
-        <div>
-          <label htmlFor='location' className='text-left'>
-            Location
-          </label>
-          <Input
-            type='text'
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className='flex flex-col space-y-6'
+      >
+        <h2 className='text-2xl font-bold'>Log New Trip</h2>
+        <div className='flex items-center space-x-4'>
+          <FormField
+            control={form.control}
             name='location'
-            placeholder='Location'
-            required
-            value={newTrip.location}
-            onChange={handleInputChange}
-            className='text-base'
-          />
-        </div>
-        <div>
-          <label htmlFor='date' className='text-left'>
-            Date
-          </label>
-          <Input
-            type='date'
-            name='date'
-            required
-            value={newTrip.date}
-            onChange={handleInputChange}
-            className='text-base'
-          />
-        </div>
-        <div>
-          <label htmlFor='time_of_day' className='text-left'>
-            Time of day
-          </label>
-          <Select
-            name='time_of_day'
-            required
-            value={newTrip.time_of_day}
-            onValueChange={(value) =>
-              setNewTrip({ ...newTrip, time_of_day: value })
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder='Time of day' />
-            </SelectTrigger>
-            <SelectContent className='text-base border border-border'>
-              <SelectItem value='Morning'>Morning</SelectItem>
-              <SelectItem value='Afternoon'>Afternoon</SelectItem>
-              <SelectItem value='Evening'>Evening</SelectItem>
-              <SelectItem value='Night'>Night</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <label htmlFor='weather' className='text-left'>
-            Weather
-          </label>
-          <Input
-            type='text'
-            name='weather'
-            placeholder='Weather'
-            required
-            value={newTrip.weather}
-            onChange={handleInputChange}
-            className='text-base'
-          />
-        </div>
-        <div>
-          <label htmlFor='water_temperture' className='text-left'>
-            Water Temperature (°C)
-          </label>
-          <Input
-            type='number'
-            name='water_temperture'
-            placeholder='Water Temperature'
-            value={newTrip.water_temperature || ''}
-            onChange={(e) =>
-              setNewTrip({
-                ...newTrip,
-                water_temperature: parseFloat(e.target.value) || null,
-              })
-            }
-            className='text-base'
-          />
-        </div>
-        <div>
-          <label htmlFor='air_temperature' className='text-left'>
-            Air Temperature (°C)
-          </label>
-          <Input
-            type='number'
-            name='air_temperature'
-            placeholder='Air Temperature'
-            value={newTrip.air_temperature || ''}
-            onChange={(e) =>
-              setNewTrip({
-                ...newTrip,
-                air_temperature: parseFloat(e.target.value) || null,
-              })
-            }
-            className='text-base'
-          />
-        </div>
-        <div>
-          <label htmlFor='notes' className='text-left'>
-            Notes
-          </label>
-          <Textarea
-            name='notes'
-            placeholder='Notes'
-            value={newTrip.notes || ''}
-            onChange={(e) => setNewTrip({ ...newTrip, notes: e.target.value })}
-            className='text-base'
-          />
-        </div>
-      </div>
-
-      <div className='space-y-4'>
-        <h3 className='text-lg'>Fish Catches</h3>
-        {fishCatches.map((fishCatch, index) => (
-          <div key={index} className='grid grid-cols-2 gap-4 mb-2'>
-            <div>
-              <label htmlFor='fish_type' className='text-left'>
-                Fish Type
-              </label>
-              <Input
-                id='fish_type'
-                type='text'
-                placeholder='Fish type'
-                value={fishCatch.fish_type || ''}
-                onChange={(e) =>
-                  updateFishCatch(index, 'fish_type', e.target.value)
-                }
-                className='text-base'
-              />
-            </div>
-            <div>
-              <label htmlFor='caught_on' className='text-left'>
-                Fly used
-              </label>
-              <Input
-                id='caught_on'
-                type='text'
-                placeholder='Caught on'
-                value={fishCatch.caught_on || ''}
-                onChange={(e) =>
-                  updateFishCatch(index, 'caught_on', e.target.value)
-                }
-                className='text-base'
-              />
-            </div>
-            <div>
-              <label htmlFor='length' className='text-left'>
-                Length (cm)
-              </label>
-              <Input
-                id='length'
-                type='number'
-                placeholder='Length (cm)'
-                value={fishCatch.length || ''}
-                onChange={(e) =>
-                  updateFishCatch(
-                    index,
-                    'length',
-                    parseFloat(e.target.value) || null
-                  )
-                }
-                className='text-base'
-              />
-            </div>
-            <div>
-              <label htmlFor='weight' className='text-left'>
-                Weight (g)
-              </label>
-              <Input
-                id='weight'
-                type='number'
-                placeholder='Weight (g)'
-                value={fishCatch.weight || ''}
-                onChange={(e) =>
-                  updateFishCatch(
-                    index,
-                    'weight',
-                    parseFloat(e.target.value) || null
-                  )
-                }
-                className='text-base'
-              />
-            </div>
-            {index > -1 && (
-              <div className='col-span-2'>
-                <Button
-                  type='button'
-                  variant='secondary'
-                  size='icon'
-                  className='w-full'
-                  onClick={() => removeFishCatch(index)}
-                >
-                  <X className='mr-2 h-4 w-4' />
-                  Remove Fish
-                </Button>
-              </div>
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter fishing location' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
-        ))}
-        <Button
-          type='button'
-          variant='outline'
-          onClick={addFishCatch}
-          className='w-full'
-        >
-          <PlusCircle className='h-4 w-4 mr-2' />
-          Add Another Fish
+          />
+          <FormField
+            control={form.control}
+            name='date'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <Input type='date' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='flex items-center space-x-4'>
+          <FormField
+            control={form.control}
+            name='time_of_day'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Time of Day</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select time of day' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className='text-base border border-border'>
+                    <SelectItem value='Morning'>Morning</SelectItem>
+                    <SelectItem value='Afternoon'>Afternoon</SelectItem>
+                    <SelectItem value='Evening'>Evening</SelectItem>
+                    <SelectItem value='Night'>Night</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='weather'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Weather</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select weather condition' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className='text-base border border-border'>
+                    <SelectItem value='Sunny'>Sunny</SelectItem>
+                    <SelectItem value='Rainy'>Rainy</SelectItem>
+                    <SelectItem value='Partly Cloudy'>Partly Cloudy</SelectItem>
+                    <SelectItem value='Overcast'>Overcast</SelectItem>
+                    <SelectItem value='Clear'>Clear sky</SelectItem>
+                    <SelectItem value='Snowy'>Snowy</SelectItem>
+                    <SelectItem value='Drizzly'>Drizzly</SelectItem>
+                    <SelectItem value='Foggy'>Foggy</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='flex items-center space-x-4'>
+          <FormField
+            control={form.control}
+            name='water_temperature'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Water Temperature (°C)</FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='Enter water temperature'
+                    {...field}
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? parseFloat(e.target.value) : null
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='air_temperature'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Air Temperature (°C)</FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='Enter air temperature'
+                    {...field}
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value ? parseFloat(e.target.value) : null
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <FormField
+          control={form.control}
+          name='notes'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notes</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder='Enter any additional notes'
+                  {...field}
+                  value={field.value !== null ? field.value : ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className='space-y-4'>
+          <h3 className='text-lg font-semibold'>Catches</h3>
+          {fields.map((field, index) => (
+            <div
+              key={field.id}
+              className='grid gap-4 grid-cols-1 sm:grid-cols-2 p-4 border border-border rounded-md'
+            >
+              <FormField
+                control={form.control}
+                name={`fish_catches.${index}.fish_type`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fish Type</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Enter fish type' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`fish_catches.${index}.caught_on`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fly Used</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Enter fly used' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`fish_catches.${index}.length`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Length (cm)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='Enter fish length'
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`fish_catches.${index}.weight`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Weight (g)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='Enter fish weight'
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? parseFloat(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type='button'
+                variant='destructive'
+                size='sm'
+                onClick={() => remove(index)}
+                className='w-full sm:col-span-2'
+              >
+                <X className='mr-2 h-4 w-4' />
+                Remove Fish
+              </Button>
+            </div>
+          ))}
+          <Button
+            type='button'
+            variant='outline'
+            onClick={() =>
+              append({
+                fish_type: '',
+                caught_on: '',
+                length: undefined,
+                weight: undefined,
+              })
+            }
+            className='w-full'
+          >
+            <PlusCircle className='mr-2 h-4 w-4' />
+            Add Catch
+          </Button>
+        </div>
+        <Button type='submit' disabled={loading} className='w-full'>
+          {loading ? <LoadingSpinner fill='fill-primary' /> : 'Log Trip'}
         </Button>
-      </div>
-
-      <Button type='submit' disabled={loading}>
-        {loading ? <LoadingSpinner fill='fill-primary' /> : 'Log Trip'}
-      </Button>
-    </form>
+      </form>
+    </Form>
   );
 }
