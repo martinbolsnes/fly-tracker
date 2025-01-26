@@ -335,7 +335,7 @@ export default function AddNewTrip() {
           <FormField
             control={form.control}
             name='image_url'
-            render={({ field: { onChange, ...field } }) => (
+            render={({ field: { onChange } }) => (
               <FormItem>
                 <FormLabel>Upload Image</FormLabel>
                 <FormControl>
