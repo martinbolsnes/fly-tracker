@@ -204,14 +204,15 @@ export function FishingStatistics({ userId }: { userId: string }) {
     trips.reduce((acc, trip) => {
       const fishList = trip.fish_catches.map((fish) => fish.fish_type.trim());
       fishList.forEach((fish) => {
-        /* const [species] = fish.split(' '); */
-        acc[fish] = (acc[fish] || 0) + 1;
+        const [species] = fish.split(' ');
+        acc[species] = acc[species] || { count: 0, fullName: fish };
+        acc[species].count += 1;
       });
       return acc;
-    }, {} as Record<string, number>)
+    }, {} as Record<string, { count: number; fullName: string }>)
   )
     .filter(([name]) => name !== 'No catch')
-    .map(([name, value]) => ({ name, value }))
+    .map(([name, { count, fullName }]) => ({ name, value: count, fullName }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 5);
 
@@ -323,7 +324,22 @@ export function FishingStatistics({ userId }: { userId: string }) {
                   tickMargin={10}
                   axisLine={false}
                 />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartTooltip
+                  cursor={false}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className='bg-background border border-border p-2 rounded-md shadow-md'>
+                          <p className='font-semibold'>
+                            {payload[0].payload.fullName}
+                          </p>
+                          <p>Count: {payload[0].value}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
                 <Bar dataKey='value' radius={4}>
                   {chartData.map((entry, index) => (
                     <Cell
