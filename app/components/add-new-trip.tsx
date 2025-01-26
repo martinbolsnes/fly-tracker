@@ -53,7 +53,7 @@ const useAddNewTrip = () => {
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
   const [userId, setUserId] = useState<string | null>(null);
-  const { uploadImage, uploading } = useImageUpload();
+  const { uploadImage } = useImageUpload();
 
   const form = useForm<z.infer<typeof tripSchema>>({
     resolver: zodResolver(tripSchema),
@@ -153,12 +153,11 @@ const useAddNewTrip = () => {
     }
   };
 
-  return { form, fields, append, remove, onSubmit, loading, uploading };
+  return { form, fields, append, remove, onSubmit, loading };
 };
 
 export default function AddNewTrip() {
-  const { form, fields, append, remove, onSubmit, loading, uploading } =
-    useAddNewTrip();
+  const { form, fields, append, remove, onSubmit, loading } = useAddNewTrip();
 
   return (
     <div className='w-full'>
@@ -336,7 +335,7 @@ export default function AddNewTrip() {
           <FormField
             control={form.control}
             name='image_url'
-            render={({ field: { value, onChange, ...field } }) => (
+            render={({ field: { onChange, ...field } }) => (
               <FormItem>
                 <FormLabel>Upload Image</FormLabel>
                 <FormControl>

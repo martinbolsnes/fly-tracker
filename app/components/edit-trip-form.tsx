@@ -60,7 +60,7 @@ interface EditTripFormProps {
 export function EditTripForm({ trip, onSave }: EditTripFormProps) {
   const [loading, setLoading] = useState(false);
   const client = createClient();
-  const { uploadImage, uploading } = useImageUpload();
+  const { uploadImage } = useImageUpload();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -343,7 +343,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
         <FormField
           control={form.control}
           name='image_url'
-          render={({ field: { value, onChange, ...field } }) => (
+          render={({ field: { onChange, ...field } }) => (
             <FormItem>
               <FormLabel>Upload Image</FormLabel>
               <FormControl>

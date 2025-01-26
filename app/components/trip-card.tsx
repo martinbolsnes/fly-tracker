@@ -32,20 +32,11 @@ import { FishingTrip } from '../types';
 
 interface TripCardProps {
   trip: FishingTrip;
-  onImageUpload: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    tripId: string
-  ) => void;
   onEdit: (trip: FishingTrip) => void;
   onDelete: (id: string) => void;
 }
 
-export function TripCard({
-  trip,
-  onImageUpload,
-  onEdit,
-  onDelete,
-}: TripCardProps) {
+export function TripCard({ trip, onEdit, onDelete }: TripCardProps) {
   return (
     <Card className='flex flex-col overflow-hidden border border-border'>
       <Link href={`/trips/${trip.id}`}>
