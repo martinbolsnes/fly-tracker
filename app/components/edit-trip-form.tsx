@@ -27,6 +27,7 @@ import { toast } from '@/components/hooks/use-toast';
 import { FishingTrip } from '../types';
 import { LoadingSpinner } from './LoadingSpinner';
 import { PlusCircle } from 'lucide-react';
+import { useImageUpload } from '@/components/hooks/use-image-upload';
 
 const fishCatchSchema = z.object({
   id: z.string().optional(),
@@ -48,6 +49,7 @@ const formSchema = z.object({
   water_temperature: z.number().nullable().optional(),
   air_temperature: z.number().nullable().optional(),
   fish_catches: z.array(fishCatchSchema),
+  image_url: z.any().optional().nullable(),
 });
 
 interface EditTripFormProps {
@@ -58,6 +60,7 @@ interface EditTripFormProps {
 export function EditTripForm({ trip, onSave }: EditTripFormProps) {
   const [loading, setLoading] = useState(false);
   const client = createClient();
+  const { uploadImage, uploading } = useImageUpload();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,6 +74,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
       water_temperature: trip?.water_temperature || null,
       air_temperature: trip?.air_temperature || null,
       fish_catches: trip?.fish_catches || [],
+      image_url: trip?.image_url || null,
     },
   });
 
@@ -91,6 +95,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
         water_temperature: trip.water_temperature,
         air_temperature: trip.air_temperature,
         fish_catches: trip?.fish_catches,
+        image_url: trip.image_url,
       });
     }
   }, [trip, form]);
@@ -111,6 +116,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
           catch_count: values.fish_catches.length,
           water_temperature: values.water_temperature,
           air_temperature: values.air_temperature,
+          image_url: values.image_url,
         })
         .eq('id', trip.id)
         .select();
@@ -153,7 +159,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
         };
         onSave(updatedTrip);
         toast({
-          title: 'Success',
+          title: 'Success 🎉',
           description: 'Trip updated successfully',
           variant: 'default',
         });
@@ -328,6 +334,36 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                   className='resize-none text-base'
                   {...field}
                   value={field.value !== null ? field.value : ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='image_url'
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormItem>
+              <FormLabel>Upload Image</FormLabel>
+              <FormControl>
+                <Input
+                  type='file'
+                  accept='image/*'
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file && trip?.id) {
+                      const imageUrl = await uploadImage(
+                        file,
+                        trip.user_id,
+                        trip.id
+                      );
+                      if (imageUrl) {
+                        onChange(imageUrl);
+                      }
+                    }
+                  }}
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
