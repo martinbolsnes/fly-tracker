@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from '@/components/hooks/use-toast';
+import { useImageUpload } from '@/components/hooks/use-image-upload';
 
 const fishCatchSchema = z.object({
   fish_type: z.string().min(1, 'Fish type is required'),
@@ -44,6 +45,7 @@ const tripSchema = z.object({
   water_temperature: z.number().nullable(),
   air_temperature: z.number().nullable(),
   fish_catches: z.array(fishCatchSchema),
+  image_url: z.any().optional().nullable(),
 });
 
 const useAddNewTrip = () => {
@@ -51,6 +53,7 @@ const useAddNewTrip = () => {
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
   const [userId, setUserId] = useState<string | null>(null);
+  const { uploadImage, uploading } = useImageUpload();
 
   const form = useForm<z.infer<typeof tripSchema>>({
     resolver: zodResolver(tripSchema),
@@ -63,6 +66,7 @@ const useAddNewTrip = () => {
       water_temperature: null,
       air_temperature: null,
       fish_catches: [],
+      image_url: null,
     },
   });
 
@@ -119,6 +123,18 @@ const useAddNewTrip = () => {
         if (catchesError) throw catchesError;
       }
 
+      if (data.image_url instanceof File && userId) {
+        const imageUrl = await uploadImage(data.image_url, userId, tripId);
+        if (imageUrl) {
+          const { error: updateError } = await supabase
+            .from('fishing_trips')
+            .update({ image_url: imageUrl })
+            .eq('id', tripId);
+
+          if (updateError) throw updateError;
+        }
+      }
+
       toast({
         title: 'Trip Added 🎣',
         description: 'Trip added successfully',
@@ -137,11 +153,12 @@ const useAddNewTrip = () => {
     }
   };
 
-  return { form, fields, append, remove, onSubmit, loading };
+  return { form, fields, append, remove, onSubmit, loading, uploading };
 };
 
 export default function AddNewTrip() {
-  const { form, fields, append, remove, onSubmit, loading } = useAddNewTrip();
+  const { form, fields, append, remove, onSubmit, loading, uploading } =
+    useAddNewTrip();
 
   return (
     <div className='w-full'>
@@ -310,6 +327,29 @@ export default function AddNewTrip() {
                     placeholder='Enter any additional notes'
                     {...field}
                     value={field.value !== null ? field.value : ''}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='image_url'
+            render={({ field: { value, onChange, ...field } }) => (
+              <FormItem>
+                <FormLabel>Upload Image</FormLabel>
+                <FormControl>
+                  <Input
+                    type='file'
+                    accept='image/*'
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        onChange(file);
+                      }
+                    }}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
