@@ -203,8 +203,8 @@ export function FishingStatistics({ userId }: { userId: string }) {
     trips.reduce((acc, trip) => {
       const fishList = trip.fish_catches.map((fish) => fish.fish_type.trim());
       fishList.forEach((fish) => {
-        const [species] = fish.split(' ');
-        acc[species] = (acc[species] || 0) + 1;
+        /* const [species] = fish.split(' '); */
+        acc[fish] = (acc[fish] || 0) + 1;
       });
       return acc;
     }, {} as Record<string, number>)
@@ -323,7 +323,14 @@ export function FishingStatistics({ userId }: { userId: string }) {
                   axisLine={false}
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey='value' fill='hsl(var(--primary))' radius={4} />
+                <Bar dataKey='value' radius={4}>
+                  {chartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={`hsl(var(--chart-${(index % 5) + 1}))`}
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             </ChartContainer>
           </CardContent>
