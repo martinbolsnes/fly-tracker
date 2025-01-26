@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import {
-  FishSymbol,
   CloudSunRain,
   Clock,
   Upload,
@@ -29,6 +28,7 @@ import {
   CloudDrizzle,
   CloudFog,
 } from 'lucide-react';
+import { IoFishOutline } from 'react-icons/io5';
 import { GiFishingPole } from 'react-icons/gi';
 import { FishingTrip } from '../types';
 
@@ -122,7 +122,7 @@ export function TripCard({
           )}
 
           <div className='flex items-center'>
-            <FishSymbol className='h-4 w-4 mr-2 text-primary' />
+            <IoFishOutline className='h-4 w-4 mr-2 text-primary' />
             {trip.catch_count}
             {trip.catch_count === 1 ? ' fish' : ' fishes'} caught
           </div>

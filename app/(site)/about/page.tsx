@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FishSymbol, Heart, Info, Droplet, Users } from 'lucide-react';
+import { Heart, Info, Droplet, Users } from 'lucide-react';
+import { IoFishOutline } from 'react-icons/io5';
 
 export default function AboutPage() {
   return (
@@ -35,7 +36,7 @@ export default function AboutPage() {
       <Card className='mb-8 border border-border'>
         <CardHeader>
           <CardTitle className='flex items-center'>
-            <FishSymbol className='mr-2' />
+            <IoFishOutline className='mr-2' />
             Catch and Release
           </CardTitle>
         </CardHeader>

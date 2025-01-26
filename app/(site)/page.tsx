@@ -7,8 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { FishSymbol, MapPin, BarChart2, CloudSunRain } from 'lucide-react';
+import { MapPin, BarChart2, CloudSunRain } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
+import { IoFishOutline } from 'react-icons/io5';
 
 export default async function LandingPage() {
   const supabase = await createClient();
@@ -40,7 +41,7 @@ export default async function LandingPage() {
           <Card className='rounded-xl border border-border bg-card text-card-foreground shadow'>
             <CardHeader>
               <CardTitle className='flex items-center space-x-2'>
-                <FishSymbol className='h-5 w-5' />
+                <IoFishOutline className='h-5 w-5' />
                 <span>Log Catches</span>
               </CardTitle>
             </CardHeader>

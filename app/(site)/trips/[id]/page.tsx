@@ -169,7 +169,7 @@ export default function TripPage() {
                 {trip.weather}
               </div>
               <div className='flex items-center space-x-2'>
-                <Clock className='h-5 w-5 text-primary' />
+                <Clock className='h-4 w-4 text-primary' />
                 <span>{trip.time_of_day}</span>
               </div>
               <div className='flex items-center space-x-2'>
