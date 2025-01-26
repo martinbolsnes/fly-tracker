@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FishSymbol, Clock, Scale, Calendar, MapPin } from 'lucide-react';
+import { Clock, Scale, Calendar, MapPin } from 'lucide-react';
 import { LoadingSpinner } from './LoadingSpinner';
 import {
   ChartContainer,
@@ -22,6 +22,7 @@ import {
   PieChart,
   XAxis,
 } from 'recharts';
+import { IoFishOutline } from 'react-icons/io5';
 
 type FishCatch = {
   fish_type: string;
@@ -258,7 +259,7 @@ export function FishingStatistics({ userId }: { userId: string }) {
         <Card className='border border-border'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>Avg Fish Size</CardTitle>
-            <FishSymbol className='h-4 w-4 text-muted-foreground' />
+            <IoFishOutline className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>
@@ -272,7 +273,7 @@ export function FishingStatistics({ userId }: { userId: string }) {
         <Card className='border border-border'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>Most Used Fly</CardTitle>
-            <FishSymbol className='h-4 w-4 text-muted-foreground' />
+            <IoFishOutline className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>{stats.mostUsedFly}</div>
@@ -393,7 +394,7 @@ export function FishingStatistics({ userId }: { userId: string }) {
             <CardTitle className='text-sm font-normal tracking-tight'>
               Total Catches
             </CardTitle>
-            <FishSymbol className='h-4 w-4' />
+            <IoFishOutline className='h-4 w-4' />
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>{stats.totalCatches}</div>
