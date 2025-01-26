@@ -9,12 +9,10 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import {
   FishSymbol,
   CloudSunRain,
   Clock,
-  Upload,
   Edit,
   Trash2,
   ThermometerSun,
@@ -129,38 +127,7 @@ export function TripCard({
           <p className='mt-2 text-sm text-muted-foreground'>{trip.notes}</p>
         )}
       </CardContent>
-      <CardFooter className='flex justify-between'>
-        {trip.image_url ? (
-          <label className='cursor-pointer'>
-            <Input
-              type='file'
-              className='hidden'
-              onChange={(e) => onImageUpload(e, trip.id)}
-              accept='image/*'
-            />
-            <Button variant='outline' size='sm' asChild>
-              <span>
-                <Upload className='h-4 w-4 mr-2' />
-                Change image
-              </span>
-            </Button>
-          </label>
-        ) : (
-          <label className='cursor-pointer'>
-            <Input
-              type='file'
-              className='hidden'
-              onChange={(e) => onImageUpload(e, trip.id)}
-              accept='image/*'
-            />
-            <Button variant='outline' size='sm' asChild>
-              <span>
-                <Upload className='h-4 w-4 mr-2' />
-                Upload image
-              </span>
-            </Button>
-          </label>
-        )}
+      <CardFooter className='flex justify-end'>
         <div className='flex items-center space-x-2'>
           <Button variant='secondary' size='sm' onClick={() => onEdit(trip)}>
             <Edit className='h-4 w-4 mr-2' />
