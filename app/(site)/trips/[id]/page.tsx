@@ -115,8 +115,11 @@ export default function TripPage() {
               <Image
                 src={trip.image_url || '/placeholder.svg'}
                 alt={`Trip to ${trip.location}`}
-                layout='fill'
-                objectFit='cover'
+                fill
+                priority
+                sizes='100vw'
+                quality={100}
+                className='object-cover w-full h-full'
               />
             </AspectRatio>
           ) : (
