@@ -402,7 +402,7 @@ export function EditTripForm({ trip, onSave }: EditTripFormProps) {
                         className='text-base'
                         type='number'
                         {...field}
-                        value={field.value !== null ? field.value : ''}
+                        value={field.value ?? ''}
                         onChange={(e) =>
                           field.onChange(
                             e.target.value ? parseFloat(e.target.value) : ''
