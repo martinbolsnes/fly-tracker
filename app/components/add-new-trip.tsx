@@ -66,7 +66,7 @@ const useAddNewTrip = () => {
       water_temperature: null,
       air_temperature: null,
       fish_catches: [],
-      image_url: null,
+      image_url: undefined,
     },
   });
 
@@ -348,7 +348,6 @@ export default function AddNewTrip() {
                         onChange(file);
                       }
                     }}
-                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
