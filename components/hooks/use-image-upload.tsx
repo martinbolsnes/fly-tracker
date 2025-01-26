@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from '@/components/hooks/use-toast';
+import { LoadingSpinner } from '@/app/components/LoadingSpinner';
 
 const BUCKET_NAME = 'trip-images';
 
@@ -24,6 +25,11 @@ export function useImageUpload() {
     setUploading(true);
 
     try {
+      toast({
+        variant: 'default',
+        title: 'Uploading image...',
+        action: <LoadingSpinner fill='fill-primary' />,
+      });
       // Fetch the current trip to get the existing image URL
       const { data: tripData, error: fetchError } = await client
         .from('fishing_trips')
