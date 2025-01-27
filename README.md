@@ -1,6 +1,6 @@
-# Flyfish Logbook
+# Fly tracker
 
-Flyfish Logbook is a web application for logging and managing your fishing trips. Built with [Next.js](https://nextjs.org), it allows users to record details about their fishing trips, including locations, weather conditions, fish catches, and more.
+Fly Tracker is a web application for logging and managing your fishing trips. Built with [Next.js](https://nextjs.org), it allows users to record details about their fishing trips, including locations, weather conditions, fish catches, and more.
 
 ## Features
 
@@ -9,6 +9,7 @@ Flyfish Logbook is a web application for logging and managing your fishing trips
 - Upload and manage trip images
 - View and edit logged trips
 - Sort and filter trips by date and location
+- Stastistics
 - Responsive design
 
 ## Getting Started
