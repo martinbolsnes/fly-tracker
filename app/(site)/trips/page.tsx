@@ -158,7 +158,7 @@ export default function TripsPage() {
           />
           <Link href='/logbook'>
             <Button variant='default' size='sm'>
-              New trip
+              Log New trip
             </Button>
           </Link>
         </div>
