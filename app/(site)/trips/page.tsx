@@ -121,7 +121,7 @@ export default function TripsPage() {
 
   return (
     <main className='container mx-auto px-4 py-8'>
-      <h1 className='text-3xl font-bold mb-6'>My Fishing Trips</h1>
+      <h1 className='text-3xl font-bold mb-6'>My Trips</h1>
 
       <div className='mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4'>
         <div className='flex items-center space-x-4'>
