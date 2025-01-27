@@ -1,6 +1,6 @@
 'use client';
 
-/* import LoginButtonGithub from '@/app/components/Login/LoginGithub'; */
+import LoginButtonGithub from '@/app/components/Login/loginGithub';
 import LoginButtonGoogle from '../../components/Login/LoginGoogle';
 import { cn } from '@/lib/utils';
 
@@ -20,7 +20,7 @@ export default function LoginPage() {
         </p>
       </div>
       <LoginButtonGoogle />
-      {/* <LoginButtonGithub /> */}
+      <LoginButtonGithub />
     </div>
   );
 }
