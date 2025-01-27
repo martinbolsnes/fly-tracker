@@ -1,6 +1,6 @@
 'use client';
 
-import LoginButtonGithub from '@/app/components/Login/loginGithub';
+import LoginButtonGithub from '@/app/components/Login/LoginGithub';
 import LoginButtonGoogle from '../../components/Login/LoginGoogle';
 import { cn } from '@/lib/utils';
 
