@@ -98,7 +98,7 @@ export const Header = async () => {
                     <SheetTrigger asChild>
                       <Link href='/trips'>
                         <Button variant='ghost' className='font-semibold'>
-                          Your trips
+                          My trips
                         </Button>
                       </Link>
                     </SheetTrigger>
