@@ -32,11 +32,7 @@ export default function LoginButtonGoogle(props: { nextUrl?: string }) {
 
   return (
     <Button variant='default' className='w-full' onClick={handleLogin}>
-      {loading ? (
-        <LoadingSpinner fill='fill-neutral-900' />
-      ) : (
-        'Log in with Google'
-      )}
+      {loading ? <LoadingSpinner fill='fill-primary' /> : 'Log in with Google'}
     </Button>
   );
 }
