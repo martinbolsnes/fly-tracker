@@ -10,6 +10,7 @@ import {
 import { MapPin, BarChart2, CloudSunRain } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { IoFishOutline } from 'react-icons/io5';
+import { FeaturesLandingPage } from '../components/FeaturesLandingPage';
 
 export default async function LandingPage() {
   const supabase = await createClient();
@@ -18,7 +19,7 @@ export default async function LandingPage() {
   } = await supabase.auth.getUser();
   return (
     <main className='h-min-svh flex flex-col bg-background'>
-      <div className='container mx-auto px-4 py-16'>
+      <div className='container mx-auto px-4 pt-16 pb-4'>
         <div className='text-center mb-16'>
           <h1 className='text-5xl font-bold mb-4 text-foreground'>
             Track Your Fly Fishing Adventures
@@ -91,6 +92,9 @@ export default async function LandingPage() {
             </CardContent>
           </Card>
         </div>
+      </div>
+      <div className='container mx-auto px-4 pb-4'>
+        <FeaturesLandingPage />
       </div>
     </main>
   );
