@@ -27,7 +27,7 @@ Before you begin, ensure you have the following installed:
 
 ```bash
 git clone https://github.com/martinbolsnes/fly-tracker.git
-cd flyfish-logbook
+cd fly-tracker
 
 ### Install dependecies
 
