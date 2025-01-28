@@ -272,7 +272,7 @@ export default function ProfilePage() {
             )}
           </div>
         </div>
-        <div className='flex flex-col items-center h-screen'>
+        <div className='flex flex-col items-center text-center h-screen'>
           <p>No fishing trips logged yet. Start logging your trips!</p>
           <Link href='/logbook'>
             <Button className='mt-4'>Log a trip</Button>
