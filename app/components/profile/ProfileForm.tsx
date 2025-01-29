@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/hooks/use-toast';
 import { updateUserProfile } from '../../(site)/profile/action';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 interface Profile {
   avatar_url?: string;
@@ -17,17 +18,20 @@ interface Profile {
 interface ProfileFormProps {
   initialProfile: Profile;
   onEditComplete: (profile: Profile) => void;
+  loading: boolean;
 }
 
 export default function ProfileForm({
   initialProfile,
   onEditComplete,
+  loading: initialLoading,
 }: ProfileFormProps) {
   const [profile, setProfile] = useState({
     ...initialProfile,
     username: initialProfile.username || '',
     short_bio: initialProfile.short_bio || '',
   });
+  const [loading, setLoading] = useState(initialLoading);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,10 +40,22 @@ export default function ProfileForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       const formData = new FormData();
       formData.append('username', profile.username || '');
       formData.append('short_bio', profile.short_bio || '');
+
+      if (!profile.username) {
+        toast({
+          title: 'Failed',
+          description: 'Your profile must have a username',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      setLoading(true);
 
       const updatedProfile = await updateUserProfile(formData);
       toast({
@@ -53,6 +69,8 @@ export default function ProfileForm({
         description: 'Failed to update profile. Please try again.',
         variant: 'destructive',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,6 +84,15 @@ export default function ProfileForm({
 
     const formData = new FormData();
     formData.append('avatar', file);
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: 'Error',
+        description: 'The image size cannot exceed 5MB.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     try {
       const updatedProfile = await updateUserProfile(formData);
@@ -116,7 +143,9 @@ export default function ProfileForm({
           accept='image/*'
         />
       </div>
-      <Button type='submit'>Save Changes</Button>
+      <Button type='submit' disabled={loading}>
+        {loading ? <LoadingSpinner /> : 'Save Changes'}
+      </Button>
     </form>
   );
 }

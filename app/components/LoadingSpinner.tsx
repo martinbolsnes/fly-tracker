@@ -10,7 +10,7 @@ interface LoadingSpinnerProps {
 export function LoadingSpinner({
   width = 'w-6',
   height = 'h-6',
-  fill = 'fill-green-500',
+  fill = 'fill-blue-600',
   margin = 'm-0',
 }: LoadingSpinnerProps) {
   return (
