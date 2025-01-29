@@ -66,7 +66,7 @@ const chartConfigPie = {
     color: 'hsl(var(--chart-landing-1))',
   },
   seatrout: {
-    label: 'Seatrout',
+    label: 'Sea Trout',
     color: 'hsl(var(--chart-landing-2))',
   },
   salmon: {
