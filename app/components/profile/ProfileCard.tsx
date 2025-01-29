@@ -85,6 +85,7 @@ export default function ProfileCard({
       <CardContent className='p-0'>
         {isEditing ? (
           <ProfileForm
+            loading={false}
             initialProfile={profile}
             onEditComplete={handleEditComplete}
           />
