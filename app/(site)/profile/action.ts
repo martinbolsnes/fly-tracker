@@ -40,7 +40,13 @@ export async function updateUserProfile(formData: FormData) {
     avatar_url = publicUrlData.publicUrl;
   }
 
-  const updateData: any = { username, short_bio };
+  interface UpdateData {
+    username: string;
+    short_bio: string;
+    avatar_url?: string | null;
+  }
+
+  const updateData: UpdateData = { username, short_bio };
   if (avatar_url) {
     updateData.avatar_url = avatar_url;
   }
