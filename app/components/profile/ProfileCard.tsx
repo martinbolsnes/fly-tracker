@@ -40,7 +40,7 @@ export default function ProfileCard({
 
   return (
     <Card className='mb-8 bg-card border border-border'>
-      <CardHeader>
+      <CardHeader className='px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center space-x-4'>
             <Avatar className='h-20 w-20'>
@@ -56,18 +56,22 @@ export default function ProfileCard({
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className='text-2xl'>{profile.full_name}</CardTitle>
-              <p className='text-foreground/80'>
+              <CardTitle className='text-lg sm:text-xl'>
+                {profile.full_name}
+              </CardTitle>
+              <p className='text-foreground/80 text-sm sm:text-base'>
                 {profile.username ? `@${profile.username}` : ''}
               </p>
               {profile.short_bio && (
-                <p className='text-foreground/80'>{profile.short_bio || ''}</p>
+                <p className='text-foreground/80 text-sm sm:text-base'>
+                  {profile.short_bio || ''}
+                </p>
               )}
             </div>
           </div>
           <Button
             variant='outline'
-            size='sm'
+            size='icon'
             onClick={() => setIsEditing(!isEditing)}
           >
             {isEditing ? (
