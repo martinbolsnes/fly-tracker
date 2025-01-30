@@ -24,10 +24,10 @@ export default async function LandingPage() {
           <h1 className='text-5xl font-bold mb-4 text-foreground'>
             Track Your Fly Fishing Adventures
           </h1>
-          <p className='text-xl mb-8 text-foreground/80'>
+          <h2 className='text-xl mb-8 text-foreground/80'>
             Record catches, analyze patterns, and become a better angler with
             The Catch Chronicles
-          </p>
+          </h2>
 
           <Button size='lg' asChild variant='default'>
             {!user ? (

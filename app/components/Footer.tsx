@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className='bg-background py-8 border-t border-border'>
@@ -7,20 +9,26 @@ export default function Footer() {
             <GiFishingPole color='primary' className='w-6 h-6' />
             <span className='text-xl'>FlyTracker</span>
           </div> */}
-          {/* <div className='flex space-x-4'>
-            <Link href='/about' className='hover:text-slate-300'>
+          <div className='flex space-x-4'>
+            <Link
+              href='/about'
+              className='text-foreground/60 hover:text-neutral-300'
+            >
               About
             </Link>
-            <Link href='/privacy' className='hover:text-slate-300'>
+            <Link
+              href='/privacy-policy'
+              className='text-foreground/60 hover:text-neutral-300'
+            >
               Privacy Policy
             </Link>
-            <Link href='/terms' className='hover:text-slate-300'>
+            {/* <Link href='/terms' className='hover:text-slate-300'>
               Terms of Service
             </Link>
             <Link href='/contact' className='hover:text-slate-300'>
               Contact
-            </Link>
-          </div> */}
+            </Link> */}
+          </div>
         </div>
         <div className='mt-4 text-center text-sm text-foreground/60'>
           © {new Date().getFullYear()} The Catch Chronicles. All rights
