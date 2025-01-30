@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Header } from '../components/Header';
 import { ThemeProvider } from '../components/theme-provider';
 import Footer from '../components/Footer';
+import { CookieInfo } from '../components/CookieInfo';
 
 const quicksand = Quicksand({ subsets: ['latin'] });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
         >
           <Header />
           {children}
+          <CookieInfo />
           <Toaster />
           <Footer />
         </ThemeProvider>
