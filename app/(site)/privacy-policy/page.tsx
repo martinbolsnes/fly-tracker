@@ -15,11 +15,11 @@ export default function PrivacyPolicyPage() {
       <section className='mb-6'>
         <h2 className='text-2xl font-semibold mb-3'>1. Introduction</h2>
         <p>
-          Welcome to The Catch Chronicles ("we," "our," or "us"). We are
-          committed to protecting your personal information and your right to
-          privacy. This Privacy Policy explains how we collect, use, disclose,
-          and safeguard your information when you use our fishing trip logger
-          application.
+          Welcome to The Catch Chronicles (&quot;we,&quot; &quot;our,&quot; or
+          &quot;us&quot;). We are committed to protecting your personal
+          information and your right to privacy. This Privacy Policy explains
+          how we collect, use, disclose, and safeguard your information when you
+          use our fishing trip logger application.
         </p>
       </section>
 
@@ -40,9 +40,9 @@ export default function PrivacyPolicyPage() {
         </p>
         <p className='mt-2'>
           We also use strictly essential cookies to maintain your authenticated
-          session and provide access to the app's features. These cookies do not
-          collect any personal information beyond what is necessary for the
-          app's basic functionality.
+          session and provide access to the app&apos;s features. These cookies
+          do not collect any personal information beyond what is necessary for
+          the app&apos;s basic functionality.
         </p>
       </section>
 
@@ -118,7 +118,7 @@ export default function PrivacyPolicyPage() {
         <p>
           We may update this Privacy Policy from time to time. We will notify
           you of any changes by posting the new Privacy Policy on this page and
-          updating the "Last updated" date.
+          updating the &quot;Last updated&quot; date.
         </p>
       </section>
 
