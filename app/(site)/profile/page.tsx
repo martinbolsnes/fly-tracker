@@ -58,6 +58,11 @@ export default async function ProfilePage() {
               View All Trips
             </Button>
           </Link>
+          <Link href='/catches'>
+            <Button variant='outline' size='sm'>
+              View All Catches
+            </Button>
+          </Link>
           <Link href='/logbook'>
             <Button variant='default' size='sm'>
               Log New Trip

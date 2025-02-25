@@ -98,7 +98,14 @@ export const Header = async () => {
                     <SheetTrigger asChild>
                       <Link href='/trips'>
                         <Button variant='ghost' className='font-semibold'>
-                          My trips
+                          Trips
+                        </Button>
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link href='/catches'>
+                        <Button variant='ghost' className='font-semibold'>
+                          Catches
                         </Button>
                       </Link>
                     </SheetTrigger>
@@ -106,6 +113,14 @@ export const Header = async () => {
                       <Link href='/logbook'>
                         <Button variant='ghost' className='font-semibold'>
                           Log new trip
+                        </Button>
+                      </Link>
+                    </SheetTrigger>
+                    <Separator />
+                    <SheetTrigger asChild>
+                      <Link href='/settings'>
+                        <Button variant='ghost' className='font-semibold'>
+                          Settings
                         </Button>
                       </Link>
                     </SheetTrigger>
