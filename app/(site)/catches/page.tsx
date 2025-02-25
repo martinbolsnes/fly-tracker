@@ -1,8 +1,6 @@
 import CatchCard from '@/app/components/CatchCard';
 import { LoadingSpinner } from '@/app/components/LoadingSpinner';
-import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/server';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 

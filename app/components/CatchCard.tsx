@@ -10,7 +10,6 @@ import { GiFishingPole } from 'react-icons/gi';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Info, MapPin, Ruler, Weight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { calculateFultonFactor } from '../(site)/trips/[id]/page';
 import {
   Popover,
