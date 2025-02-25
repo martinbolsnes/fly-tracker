@@ -37,7 +37,10 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Separator } from '@/components/ui/separator';
 import { FishingTrip } from '@/app/types';
 
-const calculateFultonFactor = (length: number, weight: number): number => {
+export const calculateFultonFactor = (
+  length: number,
+  weight: number
+): number => {
   return (weight / Math.pow(length, 3)) * 100;
 };
 
