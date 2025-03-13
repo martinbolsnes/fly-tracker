@@ -118,6 +118,7 @@ export default function ProfileForm({
       <div>
         <Label htmlFor='username'>Username</Label>
         <Input
+          className='text-base'
           id='username'
           name='username'
           value={profile.username || ''}
@@ -127,6 +128,7 @@ export default function ProfileForm({
       <div>
         <Label htmlFor='short_bio'>Short Bio</Label>
         <Input
+          className='text-base'
           id='short_bio'
           name='short_bio'
           value={profile.short_bio || ''}
@@ -136,6 +138,7 @@ export default function ProfileForm({
       <div>
         <Label htmlFor='avatar'>Avatar</Label>
         <Input
+          className='text-base'
           id='avatar'
           name='avatar'
           type='file'
