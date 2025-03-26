@@ -77,7 +77,7 @@ export function TripCard({
         <CardTitle>{trip.location}</CardTitle>
       </CardHeader>
       <CardContent className='flex-grow'>
-        <div className='grid grid-cols-2 gap-2 text-sm'>
+        <div className='grid grid-cols-2 gap-2'>
           <div className='flex items-center'>
             {trip.weather === 'Sunny' ? (
               <Sun className='h-4 w-4 mr-2 text-primary' />
