@@ -120,15 +120,15 @@ export default function TripsPage() {
   }
 
   return (
-    <main className='container mx-auto px-4 py-8'>
+    <main className='container mx-auto px-4 py-8 overflow-y-hidden'>
       <h1 className='text-3xl font-bold mb-6'>Trips</h1>
 
       <div className='mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4'>
-        <div className='flex items-center space-x-4'>
+        <div className='flex items-center space-x-2'>
           <Select
             onValueChange={(value) => setSortBy(value as keyof FishingTrip)}
           >
-            <SelectTrigger className='w-[180px]'>
+            <SelectTrigger className='w-[150px]'>
               <SelectValue placeholder='Sort by' />
             </SelectTrigger>
             <SelectContent className='border border-border'>
@@ -139,7 +139,7 @@ export default function TripsPage() {
           <Select
             onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}
           >
-            <SelectTrigger className='w-[180px]'>
+            <SelectTrigger className='w-[150px]'>
               <SelectValue placeholder='Sort order' />
             </SelectTrigger>
             <SelectContent className='border border-border'>
