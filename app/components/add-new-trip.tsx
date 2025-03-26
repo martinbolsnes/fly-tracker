@@ -204,7 +204,7 @@ export default function AddNewTrip() {
             )}
           />
 
-          <div className='flex items-center space-x-4'>
+          <div className='flex items-center space-x-2'>
             <FormField
               control={form.control}
               name='time_of_day'
@@ -243,7 +243,7 @@ export default function AddNewTrip() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder='Select weather condition' />
+                        <SelectValue placeholder='Select weather' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className='text-base border border-border'>
