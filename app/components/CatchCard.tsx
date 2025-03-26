@@ -102,114 +102,111 @@ export default function CatchCard({ initialCatches, userId }: CatchCardProps) {
               </div>
             )}
           </div>
-          <div className='p-4'>
-            <CardHeader className='flex flex-row items-center justify-between'>
-              <CardTitle>{catchItem.fish_type}</CardTitle>
-              <Link href={`/trips/${catchItem.trip_id}`}>
-                <Button variant='outline' size='sm' className='mt-auto'>
-                  View trip
-                </Button>
-              </Link>
-            </CardHeader>
-            <CardContent className='flex-grow'>
-              <Badge variant='default'>{catchItem.caught_on}</Badge>
-              <div className='grid grid-cols-2 gap-2 text-sm mt-4'>
-                <div className='flex items-center'>
-                  <MapPin className='h-4 w-4 mr-2 text-primary' />
-                  {catchItem.fishing_trips.location}
+
+          <CardHeader className='flex flex-row items-center justify-between'>
+            <CardTitle>{catchItem.fish_type}</CardTitle>
+            <Link href={`/trips/${catchItem.trip_id}`}>
+              <Button variant='outline' size='sm' className='mt-auto'>
+                View trip
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent className='flex-grow'>
+            <Badge variant='default'>{catchItem.caught_on}</Badge>
+            <div className='grid grid-cols-2 gap-2 mt-4'>
+              <div className='flex items-center'>
+                <MapPin className='h-4 w-4 mr-2 text-primary' />
+                {catchItem.fishing_trips.location}
+              </div>
+              <div className='flex items-center'>
+                <Calendar className='h-4 w-4 mr-2 text-primary' />
+                {new Date(catchItem.fishing_trips.date).toLocaleDateString()}
+              </div>
+              <div className='flex items-center'>
+                <Ruler className='h-4 w-4 mr-2 text-primary' />
+                {catchItem.length} cm
+              </div>
+              <div className='flex items-center'>
+                <Weight className='h-4 w-4 mr-2 text-primary' />{' '}
+                {catchItem.weight} g
+              </div>
+              {(catchItem.fish_type.toLowerCase().includes('trout') ||
+                catchItem.fish_type.toLowerCase().includes('ørret')) && (
+                <div className='col-span-2 flex items-center mt-4'>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Info className='w-4 h-4 mr-2 cursor-pointer' />
+                    </PopoverTrigger>
+                    <PopoverContent className='border border-border'>
+                      <p>
+                        Fulton&apos;s K factor is a measure of the condition of
+                        the fish. The Fulton&apos;s K = (W / L^3) * 100, where W
+                        is the weight of the fish in grams and L is the length
+                        of the fish in cm. A healthy fish will have a K factor
+                        between 1 and 1.1.
+                      </p>
+                    </PopoverContent>
+                  </Popover>
+                  K Factor:{' '}
+                  {calculateFultonFactor(
+                    catchItem.length,
+                    catchItem.weight
+                  ).toFixed(2)}
                 </div>
-                <div className='flex items-center'>
-                  <Calendar className='h-4 w-4 mr-2 text-primary' />
-                  {new Date(catchItem.fishing_trips.date).toLocaleDateString()}
-                </div>
-                <div className='flex items-center'>
-                  <Ruler className='h-4 w-4 mr-2 text-primary' />
-                  {catchItem.length} cm
-                </div>
-                <div className='flex items-center'>
-                  <Weight className='h-4 w-4 mr-2 text-primary' />{' '}
-                  {catchItem.weight} g
-                </div>
-                {(catchItem.fish_type.toLowerCase().includes('trout') ||
-                  catchItem.fish_type.toLowerCase().includes('ørret')) && (
-                  <div className='col-span-2 flex items-center mt-4'>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Info className='w-4 h-4 mr-2 cursor-pointer' />
-                      </PopoverTrigger>
-                      <PopoverContent className='border border-border'>
-                        <p>
-                          Fulton&apos;s K factor is a measure of the condition
-                          of the fish. The Fulton&apos;s K = (W / L^3) * 100,
-                          where W is the weight of the fish in grams and L is
-                          the length of the fish in cm. A healthy fish will have
-                          a K factor between 1 and 1.1.
-                        </p>
-                      </PopoverContent>
-                    </Popover>
-                    K Factor:{' '}
-                    {calculateFultonFactor(
-                      catchItem.length,
-                      catchItem.weight
-                    ).toFixed(2)}
-                  </div>
-                )}
-                {(catchItem.fish_type.toLowerCase().includes('trout') ||
-                  catchItem.fish_type.toLowerCase().includes('ørret')) && (
-                  <div>
-                    <Badge
-                      variant='secondary'
-                      className={`${
-                        calculateFultonFactor(
-                          catchItem.length,
-                          catchItem.weight
-                        ) < 0.9
-                          ? 'bg-red-500 text-white hover:bg-red-500'
-                          : calculateFultonFactor(
-                              catchItem.length,
-                              catchItem.weight
-                            ) < 0.95
-                          ? 'bg-neutral-500 text-white hover:bg-neutral-500'
-                          : calculateFultonFactor(
-                              catchItem.length,
-                              catchItem.weight
-                            ) < 1.06
-                          ? 'bg-green-600 text-white hover:bg-green-600'
-                          : calculateFultonFactor(
-                              catchItem.length,
-                              catchItem.weight
-                            ) < 1.16
-                          ? 'bg-green-500 text-white hover:bg-green-500'
-                          : 'bg-red-400 text-black hover:bg-red-400'
-                      }`}
-                    >
-                      {calculateFultonFactor(
+              )}
+              {(catchItem.fish_type.toLowerCase().includes('trout') ||
+                catchItem.fish_type.toLowerCase().includes('ørret')) && (
+                <div>
+                  <Badge
+                    variant='secondary'
+                    className={`${
+                      calculateFultonFactor(
                         catchItem.length,
                         catchItem.weight
-                      ) < 0.91
-                        ? 'Underweight'
+                      ) < 0.9
+                        ? 'bg-red-500 text-white hover:bg-red-500'
                         : calculateFultonFactor(
                             catchItem.length,
                             catchItem.weight
-                          ) < 0.96
-                        ? 'Average'
+                          ) < 0.95
+                        ? 'bg-neutral-500 text-white hover:bg-neutral-500'
                         : calculateFultonFactor(
                             catchItem.length,
                             catchItem.weight
                           ) < 1.06
-                        ? 'Healthy'
+                        ? 'bg-green-600 text-white hover:bg-green-600'
                         : calculateFultonFactor(
                             catchItem.length,
                             catchItem.weight
                           ) < 1.16
-                        ? 'Very Healthy'
-                        : 'Overweight'}
-                    </Badge>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </div>
+                        ? 'bg-green-500 text-white hover:bg-green-500'
+                        : 'bg-red-400 text-black hover:bg-red-400'
+                    }`}
+                  >
+                    {calculateFultonFactor(catchItem.length, catchItem.weight) <
+                    0.91
+                      ? 'Underweight'
+                      : calculateFultonFactor(
+                          catchItem.length,
+                          catchItem.weight
+                        ) < 0.96
+                      ? 'Average'
+                      : calculateFultonFactor(
+                          catchItem.length,
+                          catchItem.weight
+                        ) < 1.06
+                      ? 'Healthy'
+                      : calculateFultonFactor(
+                          catchItem.length,
+                          catchItem.weight
+                        ) < 1.16
+                      ? 'Very Healthy'
+                      : 'Overweight'}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          </CardContent>
         </Card>
       ))}
     </div>
