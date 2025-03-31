@@ -117,13 +117,13 @@ export const Header = async () => {
                       </Link>
                     </SheetTrigger>
                     <Separator />
-                    <SheetTrigger asChild>
+                    {/* <SheetTrigger asChild>
                       <Link href='/settings'>
                         <Button variant='ghost' className='font-semibold'>
                           Settings
                         </Button>
                       </Link>
-                    </SheetTrigger>
+                    </SheetTrigger> */}
                     <Separator />
                     <SheetTrigger asChild>
                       <LogoutButton />
